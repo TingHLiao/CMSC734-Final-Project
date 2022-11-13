@@ -6,8 +6,13 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
     <link rel="stylesheet" href="../style/style.css">
+    <link rel="stylesheet" href="../style/slider.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <style>#slider { margin: 10px; }  </style>
+    
 </head>
 <body>
+    
     <div id="main">
         <div class="btn-group btn-group-sm" data-toggle="buttons">
             <label class="btn btn-secondary"  data-type="cleared">
@@ -28,6 +33,12 @@
         </div>
         
         <div id="map" style="height: 640px; width: 680px; border: 1px solid #777;"></div>
+        <p></p>
+        <div id="slider-range" style="width: 680px; border: 1px solid #777;">
+            <p></p>
+            <p id="slider_min"></p>
+            <p id="slider_max"></p>
+        </div>
     </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
@@ -38,5 +49,8 @@
 <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
 <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
 <script src="../utils/d3-tip.js"></script>
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script src="./main.js"></script>
+<script src="../utils/slider.js"></script>
 </html>

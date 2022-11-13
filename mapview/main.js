@@ -29,7 +29,27 @@ function stateStyle(f) {
 }
 
 var state_coords;
+var layer = null;
 var dataset;
+
+// time slider
+var filter_min_date;
+var filter_max_date;
+var date_interpolate_func;
+var display_date_format = d3.timeFormat('%m/%d/%Y');
+function sliderSlidingListener(handler, value) {
+    /*if(handler == 0)
+        filter_min_date = structuredClone(date_interpolate_func(value));
+    else
+        filter_max_date = structuredClone(date_interpolate_func(value));
+    readyToDraw();*/
+    return display_date_format(date_interpolate_func(value));
+}
+function sliderStopListener(value0, value1) {
+    filter_min_date = structuredClone(date_interpolate_func(value0));
+    filter_max_date = structuredClone(date_interpolate_func(value1));
+    readyToDraw();
+}
 
 Promise.all([
     d3.json('../dataset/states.json'),
@@ -44,9 +64,9 @@ Promise.all([
     dataset.forEach(function(d, i) {
         dataset[i].submission_date = time_parse(d.submission_date);
     });
-    var min_time = d3.max(dataset, function(d) {return d.submission_date;});
-    var max_time = d3.max(dataset, function(d) {return d.submission_date;});
-
+    filter_min_date = d3.min(dataset, function(d) {return d.submission_date;});
+    filter_max_date = d3.max(dataset, function(d) {return d.submission_date;});
+    date_interpolate_func = d3.interpolateDate(filter_min_date, filter_max_date);
 
     readyToDraw();
 });
@@ -56,10 +76,10 @@ function readyToDraw() {
     var states = structuredClone(state_coords);
 
     // filter dataset
-    filtered_dataset = dataset.filter(function(d, i) {
-        return true; //d.state == 'Maryland';
+    var filtered_dataset = dataset.filter(function(d, i) {
+        return d.submission_date >= filter_min_date && d.submission_date <= filter_max_date;
     });
-
+    //console.log(filter_min_date, filter_max_date, filtered_dataset.length);
     counts = {};
     // sum up the filtered data
     for(var i = 0; i < filtered_dataset.length; i++) {
@@ -76,7 +96,10 @@ function readyToDraw() {
         states.features[i].properties.values = {}
         states.features[i].properties.values[show_attr] = counts[state_name];
     }
-    L.geoJson(states, {style: stateStyle}).addTo(myMap);
+    if(layer != null)
+        myMap.removeLayer(layer);
+    layer = L.geoJson(states, {style: stateStyle}).addTo(myMap);
 
 }
+
 
