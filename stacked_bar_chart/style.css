@@ -1,0 +1,36 @@
+.axis-label {
+  text-anchor: middle;
+  font-size: 12px;
+  font-weight: semibold;
+}
+
+body {
+  margin: auto;
+  width: 1400px;
+  font: 12px arial;
+}
+
+#main {
+  margin: 20px;
+}
+
+
+.rect {
+  fill: cadetblue;
+}
+
+.rect:hover {
+  stroke: black;
+}
+
+
+/* 
+.tooltip {
+  font-size: 14px;
+  visibility: hidden;
+  text-anchor: middle;
+  pointer-events: none;
+}
+ */
+
+
