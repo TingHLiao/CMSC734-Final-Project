@@ -6,19 +6,29 @@
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-
+    <div id="main">
         <svg id="chart" width="1400" height="700" style="border: 1px solid #777;">
         </svg>
-        Select date: 
-        <select id="date"></select>
+        <p></p>
+
+        <!-- Select date: 
+        <select id="date"></select> -->
 
         <input type="checkbox" id="sort">	
         Toggle sort 
-    	<!-- <b>Choose Date:</b>
-        <select id="colorAttrSelector">
-	    	<option value="2022-09-20">2022-09-20</option>
-			<option value="2020-12-31">2020-12-31</option>
-	    </select>   -->
+        <p></p>
+
+    	<!-- <div id="slider1" style="width: 1400px; border: 3px solid #777;">
+            <p></p>
+            <p id="slider_date"></p>
+        </div>
+        <p></p> -->
+
+        <div class="slidecontainer">
+            <input type="range" id="date-slider" min="0" max="1000" value="0" step="1" class="slider">
+            <p>Date: <span id="slider-show-date"></span></p>
+          </div>
+    </div> 
 </body>
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <script src="./main.js"></script>
