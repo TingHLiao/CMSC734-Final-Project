@@ -132,4 +132,3 @@ date_slider.oninput = function() {
     updateChart(dates[date_slider.value], 50);
 }
 
-// fix sort (always start from the first date)
