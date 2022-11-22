@@ -27,6 +27,9 @@ var choroScale = d3.scaleThreshold()
 var choroScale_death = d3.scaleThreshold()
     .domain([100, 1000, 30000, 50000, 500000, 800000])
 	.range(d3.schemeBlues[9]);
+var choroScale_vac = d3.scaleThreshold()
+    .domain([0, 1, 80000, 5000000, 50000000, 100000000, 20000000, 50000000])
+	.range(d3.schemeBuGn[9]);
 
 
 function stateStyle(f) {
@@ -39,7 +42,7 @@ function stateStyle(f) {
             dashArray: '3',
             fillOpacity: 0.7
         };
-    else{
+    else if (show_attr == 'conf_death'){
         return {
             fillColor: choroScale_death(f.properties.values[show_attr]),
             weight: 2,
@@ -49,6 +52,15 @@ function stateStyle(f) {
             fillOpacity: 0.7
         };
     }
+    else
+        return {
+            fillColor: choroScale_vac(f.properties.values[show_attr]),
+            weight: 2,
+            opacity: 1,
+            color: 'white',
+            dashArray: '3',
+            fillOpacity: 0.7
+        };
 }
 
 var state_coords;
@@ -76,16 +88,20 @@ function sliderStopListener(value0, value1) {
 
 Promise.all([
     d3.json('../dataset/states.json'),
-    d3.csv('../dataset/state-time_filtered.csv')
+    d3.csv('../dataset/state-time_filtered.csv'),
+    d3.csv('../dataset/state-time_vaccinations_filtered.csv')
 ]).then(function (data) {
     state_coords = data[0];
     dataset = data[1];
-    
+    vac_dataset = data[2];
 
     // time format 
     var time_parse = d3.timeParse('%m/%d/%Y');
     dataset.forEach(function(d, i) {
         dataset[i].submission_date = time_parse(d.submission_date);
+    });
+    vac_dataset.forEach(function(d, i) {
+        vac_dataset[i].submission_date = time_parse(d.submission_date);
     });
     filter_min_date = d3.min(dataset, function(d) {return d.submission_date;});
     filter_max_date = d3.max(dataset, function(d) {return d.submission_date;});
@@ -102,6 +118,9 @@ function readyToDraw() {
     var filtered_dataset = dataset.filter(function(d, i) {
         return d.submission_date >= filter_min_date && d.submission_date <= filter_max_date;
     });
+    var filtered_vac_dataset = vac_dataset.filter(function(d, i) {
+        return d.submission_date >= filter_min_date && d.submission_date <= filter_max_date;
+    });
     //console.log(filter_min_date, filter_max_date, filtered_dataset.length);
     counts = {};
     if (show_attr == 'conf_cases'){
@@ -114,7 +133,6 @@ function readyToDraw() {
             counts[d.state] += +d['new_case'];
         }
     } else if (show_attr == 'conf_death'){
-        console.log("press death");
         for(var i = 0; i < filtered_dataset.length; i++) {
             var d = filtered_dataset[i];
             if(counts[d.state] == undefined) {
@@ -122,6 +140,15 @@ function readyToDraw() {
             }
             counts[d.state] += +d['new_death'];
         }
+    } else if (show_attr == 'vac_cnt'){
+        for(var i = 0; i < filtered_vac_dataset.length; i++) {
+            var d = filtered_vac_dataset[i];
+            if(counts[d.state] == undefined) {
+                counts[d.state] = 0;
+            }
+            counts[d.state] += +d['daily_vaccinations'];
+        }
+        console.log(counts);
     }
 
     // load into states dict for geoJson
@@ -159,6 +186,10 @@ function showOnMap(type) {
             break;
         case 'conf_death':
             show_attr = 'conf_death';
+            readyToDraw();
+            break;
+        case 'vac_cnt':
+            show_attr = 'vac_cnt';
             readyToDraw();
             break;
     }
