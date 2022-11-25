@@ -100,18 +100,19 @@ function updateChart(input, speed) {
         .attr("y", d => y(d[1]))
         .attr("height", d => y(d[0]) - y(d[1]))
 
-    var text = svg.selectAll(".text")
+    var text = svg.selectAll(".text-number")
         .data(filtered_data, d => d.state);
 
     text.exit().remove()
 
     text.enter().append("text")
-        .attr("class", "text")
-        .attr("text-anchor", "middle")
+        .attr("class", "text-number")
+        // .attr("text-anchor", "left")
         .merge(text)
     .transition().duration(speed)
-        .attr("x", d => x(d.state) + x.bandwidth() / 2)
-        .attr("y", d => y(d.tot_cases) - 5)
+        .attr("transform", function(d){
+            return `translate(${x(d.state) + x.bandwidth() / 2 +1},${y(d.tot_cases) - 5}) rotate(-75)` 
+        })
         .text(d => d.tot_cases);
 }
 //-----------------------------------------------------------------------------

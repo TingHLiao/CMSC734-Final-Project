@@ -23,6 +23,11 @@ body {
   stroke: black;
 }
 
+.text-number {
+  /* fill: green; */
+  /* rotate: -2deg; */
+  font: 12px;
+}
 
 /* 
 .tooltip {
