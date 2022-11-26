@@ -1,4 +1,4 @@
-state_abbre_mapping = {
+state_abbrev_mapping = {
     'AK': 'Alaska',
     'AL': 'Alabama',
     'AR': 'Arkansas',

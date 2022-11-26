@@ -88,27 +88,28 @@ function sliderStopListener(value0, value1) {
 
 Promise.all([
     d3.json('../dataset/states.json'),
-    d3.csv('../dataset/state-time_filtered.csv'),
-    d3.csv('../dataset/state-time_vaccinations_filtered.csv')
+    d3.csv('../dataset/merge.csv')
 ]).then(function (data) {
     state_coords = data[0];
     dataset = data[1];
-    vac_dataset = data[2];
 
     // time format 
-    var time_parse = d3.timeParse('%m/%d/%Y');
+    var time_parse = d3.timeParse('%Y/%m/%d');
     dataset.forEach(function(d, i) {
-        dataset[i].submission_date = time_parse(d.submission_date);
+        dataset[i].date = time_parse(d.date);
     });
-    vac_dataset.forEach(function(d, i) {
-        vac_dataset[i].submission_date = time_parse(d.submission_date);
-    });
-    filter_min_date = d3.min(dataset, function(d) {return d.submission_date;});
-    filter_max_date = d3.max(dataset, function(d) {return d.submission_date;});
+    filter_min_date = time_parse('2020/01/22'); //d3.min(dataset, function(d) {return d.date;});
+    filter_max_date = d3.max(dataset, function(d) {return d.date;});
     date_interpolate_func = d3.interpolateDate(filter_min_date, filter_max_date);
 
     readyToDraw();
 });
+
+var show_attr_mapping = {
+    'conf_cases': 'new_case',
+    'conf_death': 'new_death',
+    'vac_cnt': 'daily_vaccinations'
+};
 
 function readyToDraw() {
     // copy the state_coords to states
@@ -116,39 +117,17 @@ function readyToDraw() {
 
     // filter dataset
     var filtered_dataset = dataset.filter(function(d, i) {
-        return d.submission_date >= filter_min_date && d.submission_date <= filter_max_date;
+        return d.date >= filter_min_date && d.date <= filter_max_date;
     });
-    var filtered_vac_dataset = vac_dataset.filter(function(d, i) {
-        return d.submission_date >= filter_min_date && d.submission_date <= filter_max_date;
-    });
-    //console.log(filter_min_date, filter_max_date, filtered_dataset.length);
     counts = {};
-    if (show_attr == 'conf_cases'){
     // sum up the filtered data
-        for(var i = 0; i < filtered_dataset.length; i++) {
-            var d = filtered_dataset[i];
-            if(counts[d.state] == undefined) {
-                counts[d.state] = 0;
-            }
-            counts[d.state] += +d['new_case'];
+    attr = show_attr_mapping[show_attr];
+    for(var i = 0; i < filtered_dataset.length; i++) {
+        var d = filtered_dataset[i];
+        if(counts[d.state] == undefined) {
+            counts[d.state] = 0;
         }
-    } else if (show_attr == 'conf_death'){
-        for(var i = 0; i < filtered_dataset.length; i++) {
-            var d = filtered_dataset[i];
-            if(counts[d.state] == undefined) {
-                counts[d.state] = 0;
-            }
-            counts[d.state] += +d['new_death'];
-        }
-    } else if (show_attr == 'vac_cnt'){
-        for(var i = 0; i < filtered_vac_dataset.length; i++) {
-            var d = filtered_vac_dataset[i];
-            if(counts[d.state] == undefined) {
-                counts[d.state] = 0;
-            }
-            counts[d.state] += +d['daily_vaccinations'];
-        }
-        console.log(counts);
+        counts[d.state] += +d[attr];
     }
 
     // load into states dict for geoJson
