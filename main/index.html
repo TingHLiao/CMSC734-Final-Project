@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CMSC734 Final Project</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <div class="title">
+        COVID-19 U.S. Data Visualization
+    </div>
+
+    <div class="float-container">
+        <div class="float-child-primary">
+            <div class="primary">
+                <!-- ------------------------- -->
+                <div class="control-panel-1">
+                    <div class="slider-and-state">
+
+                        <div class="slidecontainer">
+                            <!-- <p style="padding: 0;">2020-01-30 <span id="slider-show-date"></span></p> -->
+                            <input type="range" id="date-slider" min="0" max="1000" value="0" step="1" class="slider">
+                            
+                        </div>
+                        <div>
+                            <select class="state-dropdown" style="width: 300px; height: 32px; padding: 2px; background-color: rgba(118, 118, 128, 0.12); border-radius: 9px; ">
+                                <option value="California">California</option>
+                                <option value="Maryland">Maryland</option>
+                                <option value="New York">New York</option>
+                              </select>
+                        </div>
+                    </div>
+                    
+                    
+                    
+                    <p></p>
+                    <div class="SegmentedPicker" style="width: 660px; height: 32px; padding: 2px; background-color: rgba(118, 118, 128, 0.12); border-radius: 9px; ">
+                    </div>
+                </div>
+
+                <div class="text-map-description" style="font-size: 14px; padding-top: 20px; padding-bottom: 20px; height: 14px; line-height: 100%; ">
+                    The map below shows the total deaths in each state on the selected date.
+                </div>
+
+
+                <!-- ------------------------- -->
+                <div class="map" id="map"></div>
+            </div>
+        </div>
+        <!-- --------------------------------------------------------------------------- -->
+        <div class="float-child-secondary">
+            <div class="secondary">
+                <div style="padding: 20px;">
+                    Please select a secondary view
+                </div>
+            </div>
+        </div>
+
+    </div>
+  
+
+    
+</body>
+<script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js" integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA==" crossorigin=""></script>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="./main.js"></script>
+
+</html>
