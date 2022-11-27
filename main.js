@@ -40,9 +40,12 @@ Promise.all([
     filter_max_date = d3.max(dataset, function(d) {return d.date;});
     date_interpolate_func = d3.interpolateDate(time_parse(filter_min_date), time_parse(filter_max_date));
     changeSliderMode("time");
+    show_secondary_view_options();
     update();
 });
 
+
+// update both views
 function update() {
     // filter dataset
     filtered_dataset = dataset.filter(function(d, i) {
@@ -52,12 +55,7 @@ function update() {
     show_secondary_view();
 }
 
-function show_secondary_view() {
-    d3.select('#secondary_svg').selectAll('*').remove();
-
-    load_connected_scatter(filtered_dataset);
-}
-
+/* primary view start */
 var primary_view_attr_mapping = {
     'conf_cases': 'new_case',
     'conf_death': 'new_death',
@@ -78,3 +76,106 @@ function show_map(show_attr) {
     attr = primary_view_attr_mapping[show_attr];
     draw_map(filtered_dataset, attr);
 }
+/* primary view end */
+
+/* secondary view start */
+
+secondary_options = {
+    'time': {
+        'scatter plot': {
+            'x': ['h', 'i', 'j'],
+            'y': ['k', 'l', 'm'],
+        },
+        'stacked bar chart': {
+            'x': ['o', 'p', 'q'],
+            'y': [],
+        },
+        'parallel coordinate': {
+            'x': [],
+            'y': [],
+        },
+    },
+    'period': {
+        'connected scatter plot': {
+            'x': ['a', 'b', 'c'],
+            'y': ['e', 'f', 'g'],
+        },
+        'scatter plot': {
+            'x': ['h', 'i', 'j'],
+            'y': ['k', 'l', 'm'],
+        },
+        'stacked bar chart': {
+            'x': ['o', 'p', 'q'],
+            'y': [],
+        },
+        'parallel coordinate': {
+            'x': [],
+            'y': [],   
+        },
+    }
+}
+
+
+function show_secondary_view_options() {
+    valid_options = Object.keys(secondary_options[slider_mode]);
+    var options = $('option[name="secondary-option"]');
+    for(var i = 0; i < options.length; i++) {
+        if(i < valid_options.length) {
+            $(options[i]).show();
+            $(options[i]).text(valid_options[i]);
+        } else {
+            $(options[i]).hide();
+        }
+    }
+    
+    change_secondary_view();
+}
+
+function change_secondary_view() {
+    var selected = document.getElementById('secondary-select').value;
+    selected = Object.keys(secondary_options[slider_mode])[+selected];
+    
+    // x-axis 
+    valid_xaxis_options = secondary_options[slider_mode][selected]['x'];
+    if(valid_xaxis_options.length > 0) {
+        var x_options = $('option[name="secondary-option-x"]');
+        $('#secondary-select-x').show();
+        for(var i = 0; i < x_options.length; i++) {
+            if(i < valid_xaxis_options.length) {
+                $(x_options[i]).show();
+                $(x_options[i]).text(valid_xaxis_options[i]);
+            } else {
+                $(x_options[i]).hide();
+            }
+        }
+    } else {
+        $('#secondary-select-x').hide();
+    }
+    // y-axis
+    valid_yaxis_options = secondary_options[slider_mode][selected]['y'];
+    if(valid_xaxis_options.length > 0) {
+        var y_options = $('option[name="secondary-option-y"]');
+        $('#secondary-select-y').show();
+        for(var i = 0; i < y_options.length; i++) {
+            if(i < valid_yaxis_options.length) {
+                $(y_options[i]).show();
+                $(y_options[i]).text(valid_yaxis_options[i]);
+            } else {
+                $(y_options[i]).hide();
+            }
+        }
+    } else {
+        $('#secondary-select-y').hide();
+    }
+    console.log(selected);
+    select_secondary_view = selected;
+    show_secondary_view();
+}
+
+function show_secondary_view() {
+    d3.select('#secondary_svg').selectAll('*').remove();
+    if(select_secondary_view == 'connected scatter plot') {
+        load_connected_scatter(filtered_dataset);
+    }
+}
+/* secondary view end */

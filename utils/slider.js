@@ -41,6 +41,7 @@ $("#slider-single").slider({
 
 var slider_mode = 'time';
 $('#slider-range').hide();
+
 function changeSliderMode(mode) {
   slider_mode = mode;
   if(mode == 'time') {
