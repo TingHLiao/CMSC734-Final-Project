@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <title>Nutrient Database Explorer</title>
+    <link rel="stylesheet" type="text/css" href="parallel.css" />
+    <link rel="stylesheet" href="../style/slider.css">
+    <link rel="stylesheet" href="../style/style.css">
+  </head>
+  <body>
+
+  <div id="chart">
+    <canvas id="background"></canvas>
+    <canvas id="foreground"></canvas>
+    <canvas id="highlight"></canvas>
+    <svg></svg>
+  </div>
+  <div id="wrap">
+    <div class="third" id="controls">
+      <!-- <div class="little-box">
+        <h3>Controls</h3>
+        <p>
+          <strong>Brush</strong>: Drag vertically along an axis.<br/>
+          <strong>Remove Brush</strong>: Tap the axis background.<br/>
+          <strong>Reorder Axes</strong>: Drag a label horizontally.<br/>
+          <strong>Invert Axis</strong>: Tap an axis label.<br/>
+          <strong>Remove Axis</strong>: Drag axis label to the left edge.<br/>
+        </p>
+      </div> -->
+    </div>
+    <div  class="third">
+      <small>
+      </small>
+      <h3>States</h3>
+      <p id="legend">
+      </p>
+    </div>
+    <div class="third">
+      <div id="slider" style="width: 300px;">
+        <div>
+            <input type="radio" name="radio-slider" id="radio-time" onclick="changeSliderMode('time')" checked="checked" />
+            <label>Time</label>
+            <input type="radio" name="radio-slider" id="radio-period" onclick="changeSliderMode('period')"/>
+            <label>Period</label>
+        </div>
+        <div style="position: relative">
+            <div id="slider-value1" class="slider-value"></div>
+            <div id="slider-value2" class="slider-value"></div>
+            <div id="slider-range" class="slidecontainer"></div>
+            <div id="slider-single" class="slidecontainer"></div>
+        </div>
+     </div>
+    </div>
+  </div>
+  </body>
+  <script src="https://mbostock.github.io/d3/d3.v2.js"></script>
+  <script src="http://d3js.org/d3.v5.min.js"></script>
+  <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+  <script src="http://underscorejs.org/underscore.js"></script>
+  <script src="../utils/d3-tip.js"></script>
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script> 
+  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+  <script src="parallel.js"></script>
+  <script src="../utils/slider.js"></script>
+</html>
