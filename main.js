@@ -1,5 +1,5 @@
 var select_secondary_view = 'connected_scatter';
-
+var select_secondary_x_axis, select_secondary_y_axis;
 
 var dataset;
 var state_coords;
@@ -139,7 +139,7 @@ function change_secondary_view() {
     valid_xaxis_options = secondary_options[slider_mode][selected]['x'];
     if(valid_xaxis_options.length > 0) {
         var x_options = $('option[name="secondary-option-x"]');
-        $('#secondary-select-x').show();
+        $('#secondary-div-x').show();
         for(var i = 0; i < x_options.length; i++) {
             if(i < valid_xaxis_options.length) {
                 $(x_options[i]).show();
@@ -149,13 +149,13 @@ function change_secondary_view() {
             }
         }
     } else {
-        $('#secondary-select-x').hide();
+        $('#secondary-div-x').hide();
     }
     // y-axis
     valid_yaxis_options = secondary_options[slider_mode][selected]['y'];
-    if(valid_xaxis_options.length > 0) {
+    if(valid_yaxis_options.length > 0) {
         var y_options = $('option[name="secondary-option-y"]');
-        $('#secondary-select-y').show();
+        $('#secondary-div-y').show();
         for(var i = 0; i < y_options.length; i++) {
             if(i < valid_yaxis_options.length) {
                 $(y_options[i]).show();
@@ -165,14 +165,28 @@ function change_secondary_view() {
             }
         }
     } else {
-        $('#secondary-select-y').hide();
+        $('#secondary-div-y').hide();
     }
     console.log(selected);
     select_secondary_view = selected;
+
+    change_secondary_axis();
     show_secondary_view();
 }
 
+function change_secondary_axis() {
+    var selected_x = document.getElementById('secondary-select-x').value;
+    selected_x = secondary_options[slider_mode][select_secondary_view]['x'][+selected_x];
+
+    var selected_y = document.getElementById('secondary-select-y').value;
+    selected_y = secondary_options[slider_mode][select_secondary_view]['y'][+selected_y];
+
+    select_secondary_x_axis = selected_x;
+    select_secondary_y_axis = selected_y;
+}
+
 function show_secondary_view() {
+    console.log(select_secondary_view, select_secondary_x_axis, select_secondary_y_axis);
     d3.select('#secondary_svg').selectAll('*').remove();
     if(select_secondary_view == 'connected scatter plot') {
         load_connected_scatter(filtered_dataset);
