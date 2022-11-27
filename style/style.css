@@ -7,11 +7,127 @@ label.btn.btn-secondary.active:active {
     box-shadow: none !important;
 }
 
-body {
+/* body {
     font-family: "Open Sans";
     margin: 0;
+} */
+
+/* #main {
+    margin: 20px;
+} */
+
+
+
+.map {
+    box-sizing: border-box;
+
+    width: 700px;
+    height: 480px;
+
+    border: 1px solid #AEAEB2;
+    background-color: rgba(249, 249, 249, 0.94);
+    /* Blur 1 */
+    filter: drop-shadow(0px 4px 15px rgba(0, 0, 0, 0.2));
+    border-radius: 10px;
 }
 
-#main {
-    margin: 20px;
+#map {
+    width: 700px;
+    height: 480px;
+  }
+  
+body {
+    font-family: Arial;
 }
+
+.float-container {
+    width: 1280px;
+    /* border: 3px solid #fff; */
+    padding: 0px;
+}
+
+.float-child-primary {
+    width: 700px;
+    float: left;
+    padding: 20px;
+}
+
+.float-child-secondary {
+    width: 500px;
+    float: right;
+    padding: 20px;
+}
+
+.title {
+    padding: 20px;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.control-panel-1 {
+    width: 660px;
+    height: 128px;
+    padding: 20px;
+    background-color: rgba(249, 249, 249, 0.94);
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.20);
+    border-radius: 10px;
+    /* display: inline-flex; */
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+/* .slider-and-state {
+        display: inline-flex;
+} */
+
+.secondary {
+    width: 500px;
+    height: 702px;
+    background-color: rgba(249, 249, 249, 0.94);
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.20);
+    border-radius: 10px;
+    position: relative;
+}
+
+
+
+
+.slidecontainer {
+    width: 100%;
+}
+
+.slider {
+    /* -webkit-appearance: none; */
+    width: 300px;
+    height: 2px;
+    background: #C7C7CC;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.slider:hover {
+    opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background-color: white; 
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+
+/* .slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    background: #04AA6D;
+    cursor: pointer;
+} */
+
+
+

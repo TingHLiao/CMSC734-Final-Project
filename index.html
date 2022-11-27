@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>COVID-19 visualization</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous"> -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
     <link rel="stylesheet" href="../style/style.css">
     <link rel="stylesheet" href="../style/slider.css">
@@ -11,44 +11,69 @@
     <style>#slider { margin: 10px; }  </style>
     
 </head>
-<body style="">
-    <div id="main" style="width: 50%; float: left">
-        <div id="slider">
-            <div>
-                <input type="radio" name="radio-slider" id="radio-time" onclick="changeSliderMode('time')" checked="checked" />
-                <label>Time</label>
-                <input type="radio" name="radio-slider" id="radio-period" onclick="changeSliderMode('period')"/>
-                <label>Period</label>
-            </div>
-            <div style="position: relative">
-                <div id="slider-value1" class="slider-value"></div>
-                <div id="slider-value2" class="slider-value"></div>
-                <div id="slider-range" class="slidecontainer"></div>
-                <div id="slider-single" class="slidecontainer"></div>
-            </div>
-        </div>
-        
-        <br/>
-        <div class="btn-group btn-group-sm" data-toggle="buttons">
-            <label class="btn btn-secondary"  data-type="cleared">
-                <input type="checkbox" name="options" autocomplete="off">Cleared
-            </label>
-            <label class="btn btn-secondary"  data-type="conf_cases">
-                <input type="checkbox" name="options" autocomplete="off">Total cases
-            </label>
-            <label class="btn btn-secondary"  data-type="conf_death">
-                <input type="checkbox" name="options" autocomplete="off">Total death
-            </label>
-            <label class="btn btn-secondary"  data-type="vac_cnt">
-                <input type="checkbox" name="options" autocomplete="off">Vaccinations count
-            </label> 
-        </div>
-        
-        <div id="map" style="height: 640px; width: 100%; border: 1px solid #777;"></div>
+<body >
+    <div class="title">
+        COVID-19 U.S. Data Visualization
     </div>
-    <div id="secondary" style="width: 45%; float: left">
-        <p>secondary view</p>
-        <svg id="secondary_svg" width="100%" height="640px" style="border: 1px solid #777;"></svg>
+
+    <div class="float-container">
+        <div class="float-child-primary">
+            <div class="primary">
+                <!-- ------------------------- -->
+                <div class="control-panel-1">
+                    <div id="slider" style="width: 300px;">
+                        <div>
+                            <input type="radio" name="radio-slider" id="radio-time" onclick="changeSliderMode('time')" checked="checked" />
+                            <label>Time</label>
+                            <input type="radio" name="radio-slider" id="radio-period" onclick="changeSliderMode('period')"/>
+                            <label>Period</label>
+                        </div>
+                        <div style="position: relative">
+                            <div id="slider-value1" class="slider-value"></div>
+                            <div id="slider-value2" class="slider-value"></div>
+                            <div id="slider-range" class="slidecontainer"></div>
+                            <div id="slider-single" class="slidecontainer"></div>
+                        </div>
+                    </div>
+      
+                    
+                    <br/><br/>
+                    <div class="btn-group btn-group-sm" data-toggle="buttons">
+                        <label class="btn btn-secondary"  data-type="cleared">
+                            <input type="checkbox" name="options" autocomplete="off">Cleared
+                        </label>
+                        <label class="btn btn-secondary"  data-type="conf_cases">
+                            <input type="checkbox" name="options" autocomplete="off">Total cases
+                        </label>
+                        <label class="btn btn-secondary"  data-type="conf_death">
+                            <input type="checkbox" name="options" autocomplete="off">Total death
+                        </label>
+                        <label class="btn btn-secondary"  data-type="vac_cnt">
+                            <input type="checkbox" name="options" autocomplete="off">Vaccinations count
+                        </label> 
+                    </div>
+
+                </div>
+
+                <div class="text-map-description" style="font-size: 14px; padding-top: 20px; padding-bottom: 20px; height: 14px; line-height: 100%; ">
+                    The map below shows the total deaths in each state on the selected date.
+                </div>
+
+                <!-- ------------------------- -->
+                <div class="map" id="map"></div>
+            </div>
+        </div>
+        <!-- --------------------------------------------------------------------------- -->
+        <div class="float-child-secondary">
+            <div class="secondary">
+                <div style="padding: 20px;">
+                    Please select a secondary view
+                    <p>secondary view</p>
+        <svg id="secondary_svg" width="100%" height="640px" ></svg>
+                </div>
+            </div>
+        </div>
+
     </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
