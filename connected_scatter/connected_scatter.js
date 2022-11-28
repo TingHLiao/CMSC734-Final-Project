@@ -11,7 +11,7 @@ function ConnectedScatterplot(data, {
     marginTop = 20, // top margin, in pixels
     marginRight = 20, // right margin, in pixels
     marginBottom = 30, // bottom margin, in pixels
-    marginLeft = 30, // left margin, in pixels
+    marginLeft = 40, // left margin, in pixels
     inset = r * 2, // inset the default range, in pixels
     insetTop = inset, // inset the default y-range
     insetRight = inset, // inset the default x-range
@@ -20,12 +20,12 @@ function ConnectedScatterplot(data, {
     xType = d3.scaleLinear, // type of x-scale
     xDomain, // [xmin, xmax]
     xRange = [marginLeft + insetLeft, width - marginRight - insetRight], // [left, right]
-    xFormat, // a format specifier string for the x-axis
+    xFormat = d3.format(".2s"), // a format specifier string for the x-axis
     xLabel, // a label for the x-axis
     yType = d3.scaleLinear, // type of y-scale
     yDomain, // [ymin, ymax]
     yRange = [height - marginBottom - insetBottom, marginTop + insetTop], // [bottom, top]
-    yFormat, // a format specifier string for the y-axis
+    yFormat = d3.format(".2s"), // a format specifier string for the y-axis
     yLabel, // a label for the y-axis
     fill = "white", // fill color of dots
     stroke = "currentColor", // stroke color of line and dots
@@ -34,16 +34,17 @@ function ConnectedScatterplot(data, {
     strokeLinejoin = "round", // stroke line join of line
     halo = "#fff", // halo color for the labels
     haloWidth = 6, // halo width for the labels
-    duration = 0 // intro animation in milliseconds (0 to disable)
+    duration = 0, // intro animation in milliseconds (0 to disable)
+    run_animate = false,
   } = {}) {
     // Compute values.
-    const X = data.map(x); //d3.map(data, x);
-    const Y = data.map(y); //d3.map(data, y);
-    const T = title == null ? null : data.map(title); //d3.map(data, title);
-    const O = data.map(orient); //d3.map(data, orient);
+    const X = d3.map(data, x);
+    const Y = d3.map(data, y);
+    const T = title == null ? null : d3.map(data, title);
+    const O = d3.map(data, orient);
     const I = d3.range(X.length);
     if (defined === undefined) defined = (d, i) => !isNaN(X[i]) && !isNaN(Y[i]);
-    const D = data.map(defined); //d3.map(data, defined);
+    const D = d3.map(data, defined);
 
      // Compute default domains.
     if (xDomain === undefined) xDomain = d3.extent(X);//d3.nice(...d3.extent(X), width / 80);
@@ -165,41 +166,57 @@ function ConnectedScatterplot(data, {
             .attr("opacity", 1);
       }    
     }
-  
-    animate();
-  
+    if(run_animate) {
+      animate();
+    }
+    
     return Object.assign(svg.node(), {animate});
   }
 
-function load_connected_scatter(dataset) {
-    console.log(dataset);
+var dataset_rollup;
 
-    var svg = d3.select('#secondary-svg');
-    var display_date_format = d3.timeFormat('%m/%d/%Y');
-    ConnectedScatterplot(dataset.slice(10500, 10550), {
-        x: d => +d.new_case,
-        y: d => +d.new_death,
-        title: d => display_date_format(d.date),
-        orient: d => 'top',
-        yFormat: ".2f",
-        xLabel: "new cases",
-        yLabel: "new death",
-        width: 700,
-        height: 720,
-        duration: 5000, // for the intro animation; 0 to disable
-        stroke: 'blue',
-    });
-    ConnectedScatterplot(dataset.slice(20500, 20550), {
-        x: d => +d.new_case,
-        y: d => +d.new_death,
-        title: d => display_date_format(d.date),
-        orient: d => 'top',
-        yFormat: ".2f",
-        xLabel: "new cases",
-        yLabel: "new death",
-        width: 700,
-        height: 720,
-        duration: 5000, // for the intro animation; 0 to disable
-        stroke: 'green',
-    });
+var rollup_method = {
+  'new_case': 'sum',
+  'new_death': 'sum',
+  'total_vaccinations': 'max',
+  'daily_vaccinations': 'sum',
+}
+
+function load_connected_scatter(dataset, xaxis, yaxis) {
+  console.log(xaxis, yaxis);
+  dataset_rollup = d3.nest()
+    .key(function(d) {return d.date.slice(0, 7);})
+    .rollup(function(d) {
+      let x_rollup = rollup_method[xaxis];
+      if(x_rollup == 'sum') {
+        var x_func = d3.sum(d, function(e) {return +e[xaxis];})
+      } else if(x_rollup == 'max') {
+        var x_func = d3.max(d, function(e) {return +e[xaxis];})
+      }
+      let y_rollup = rollup_method[yaxis];
+      if(y_rollup == 'sum') {
+        var y_func = d3.sum(d, function(e) {return +e[yaxis];})
+      } else if(y_rollup == 'max') {
+        var y_func = d3.max(d, function(e) {return +e[yaxis];})
+      }
+      return {
+        x: x_func,
+        y: y_func,
+      };
+    })
+    .entries(dataset);
+  console.log(dataset_rollup);
+  ConnectedScatterplot(dataset_rollup, {
+      x: d => d.value.x,
+      y: d => d.value.y,
+      title: d => d.key,
+      orient: d => 'top',
+      xLabel: xaxis,
+      yLabel: yaxis,
+      width: 460,
+      height: 600,
+      duration: 5000, // for the intro animation; 0 to disable
+      stroke: 'blue',
+      run_animate: true,
+  });
 }
