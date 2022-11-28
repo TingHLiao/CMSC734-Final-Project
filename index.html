@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>COVID-19 visualization</title>
-    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
     <link rel="stylesheet" href="../style/style.css">
     <link rel="stylesheet" href="../style/slider.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css" />
     <style>#slider { margin: 10px; }  </style>
     
@@ -113,9 +113,13 @@
 
                 </div>
 
-                <div class="text-map-description" style="font-size: 14px; padding-top: 20px; padding-bottom: 20px; height: 14px; line-height: 100%; ">
-                    The map below shows the total deaths in each state on the selected date.
+                <div class="text-container">
+                    <div class="text-map-description" style="font-size: 14px; ">
+                        The map below shows the total deaths in each state on the selected date.
+                    </div>
+
                 </div>
+                
 
                 <!-- ------------------------- -->
                 <div class="map" id="map"></div>
@@ -168,7 +172,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js"></script>
-    
 </body>
 <script>
     $('select[multiple]').multiselect();

@@ -22,7 +22,7 @@ label.btn.btn-secondary.active:active {
     box-sizing: border-box;
 
     width: 700px;
-    height: 480px;
+    height: 460px;
 
     border: 1px solid #AEAEB2;
     background-color: rgba(249, 249, 249, 0.94);
@@ -33,7 +33,7 @@ label.btn.btn-secondary.active:active {
 
 #map {
     width: 700px;
-    height: 480px;
+    height: 460px;
   }
   
 body {
@@ -47,14 +47,15 @@ body {
 }
 
 .float-child-primary {
-    width: 700px;
+    width: 740px;
+    height: 700;
     float: left;
     padding: 20px;
 }
 
 .float-child-secondary {
     width: 700px;
-    float: right;
+    float: left;
     padding: 20px;
 }
 
@@ -65,12 +66,13 @@ body {
 }
 
 .control-panel-1 {
-    width: 660px;
-    height: 128px;
+    width: 700px;
+    height: 180px;
     padding: 20px;
     background-color: rgba(249, 249, 249, 0.94);
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.20);
     border-radius: 10px;
+    /* --------------------------- */
     /* display: inline-flex; */
     flex-direction: row;
     align-items: flex-start;
@@ -83,7 +85,7 @@ body {
 
 .secondary {
     width: 700px;
-    height: 702px;
+    height: 700px;
     background-color: rgba(249, 249, 249, 0.94);
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.20);
     border-radius: 10px;
@@ -130,4 +132,14 @@ body {
 } */
 
 
+/* 
+*,
+*::before,
+*::after {
+  box-sizing:unset;
+} */
 
+.text-container {
+    height: 60px;
+    padding: 10px 0;
+}
