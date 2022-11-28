@@ -17,10 +17,10 @@
     </div>
 
     <div class="float-container">
-        <div class="float-child-primary">
-            <div class="primary">
+        <div class="float-child-primary" id="float-child-primary">
+            <div class="primary" id="child-primary">
                 <!-- ------------------------- -->
-                <div class="control-panel-1">
+                <div class="control-panel-1" id="control-panel-1">
                     <div id="slider" style="width: 300px;">
                         <div>
                             <input type="radio" name="radio-slider" id="radio-time" onclick="changeSliderMode('time'); show_secondary_view_options();" checked="checked" />
@@ -64,8 +64,8 @@
             </div>
         </div>
         <!-- --------------------------------------------------------------------------- -->
-        <div class="float-child-secondary">
-            <div class="secondary">
+        <div class="float-child-secondary" id="float-child-secondary">
+            <div class="secondary" id="child-secondary">
                 <div style="padding: 20px;">
                     Please select a secondary view
                     <select id="secondary-select" onchange="change_secondary_view()"> 
@@ -97,8 +97,11 @@
                 </div>
             </div>
         </div>
-
+        <div style="padding-left: 20px; position: relative; display: inline-block;">
+            <div id="slider-resize" style="width: 1240px;"></div>
+        </div>
     </div>
+    
 </body>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
@@ -114,4 +117,5 @@
 <script src="mapview/mapview.js"></script>
 <script src="connected_scatter/connected_scatter.js"></script>
 <script src="utils/slider.js"></script>
+<script src="utils/resize.js"></script>
 </html>

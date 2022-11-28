@@ -71,3 +71,4 @@ function update_slider_tag() {
     $("#slider-value2").text(dates[1]);
   }
 }
+
