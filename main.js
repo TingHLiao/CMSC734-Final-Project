@@ -78,6 +78,7 @@ d3.selectAll('.btn-group > .btn.btn-secondary')
         d3.selectAll('.btn.btn-secondary.active').classed('active', false);
 
         show_map(show_attr);
+        show_secondary_view();
     });
 function show_map(show_attr) {
     attr = primary_view_attr_mapping[show_attr];

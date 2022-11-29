@@ -1,7 +1,15 @@
+
+var map_attr  = {
+    'conf_cases': 'new_case',
+    'conf_death': 'new_death',
+    'vac_cnt': 'daily_vaccinations'
+};
+
+
 function load_bar_chart(dataset, filter_min_date, filter_max_date) {
     var is_time = filter_max_date == filter_min_date; // time or period
     if (is_time) {
-        load_bar_chart_time(dataset, filter_min_date, filter_max_date);
+        load_bar_chart_time(dataset);
     }
     else {
         load_bar_chart_period(dataset, filter_min_date, filter_max_date);
@@ -9,11 +17,17 @@ function load_bar_chart(dataset, filter_min_date, filter_max_date) {
 }
 
 
-function load_bar_chart_time(dataset, filter_min_date, filter_max_date) {
+function load_bar_chart_time(dataset) {
+    var attr = map_attr[show_attr];
     var time_parse = d3.timeParse('%Y/%m/%d');
     var dates = [];
     var states = [];
-    var x, y, z,max_new_cases, svg, xAxis, yAxis;
+    var x, y, color_scale, max_new_cases, svg, xAxis, yAxis;
+    var map_color = { 
+        'conf_cases': 'darkorange',
+        'conf_death': 'steelblue',
+        'vac_cnt': 'forestgreen'
+    };
 
     //-------------------------------------------------------------------------------------------------------------------------
     data=dataset;
@@ -25,7 +39,8 @@ function load_bar_chart_time(dataset, filter_min_date, filter_max_date) {
 	.enter().append("option")
 		.text(d => d)
     
-    max_new_cases = d3.max(data, function(d){return +d['new_case'];});
+    max_new_cases = d3.max(data, function(d){return +d[attr];});
+    min_new_cases = d3.min(data, function(d){return +d[attr];});
 
     svg = d3.select("#secondary_svg"),
     margin = {top: 65, left: 35, bottom: 10, right: 10};
@@ -42,6 +57,9 @@ function load_bar_chart_time(dataset, filter_min_date, filter_max_date) {
 	y = d3.scaleLinear()
 		.rangeRound([height - margin.bottom, margin.top])
 
+    color_scale = d3.scaleLinear()
+        .range([30, 100]);
+
 	xAxis = svg.append("g")
 		.attr("transform", `translate(0,${height - margin.bottom})`)
 		.attr("class", "x-axis")
@@ -55,7 +73,7 @@ function load_bar_chart_time(dataset, filter_min_date, filter_max_date) {
 
     //-----------------------------------------------------------------------------
     function updateChart(input, speed) {
-   
+
         var filtered_data = data.filter(function(d) { if( d.date == input) { return d; } });
 
 
@@ -73,6 +91,7 @@ function load_bar_chart_time(dataset, filter_min_date, filter_max_date) {
         //Axis
         x.domain(filtered_data.map(d => d.state));
         y.domain([0,max_new_cases]);
+        color_scale.domain([min_new_cases, max_new_cases]);
 
         svg.selectAll(".x-axis")
             .transition()
@@ -96,14 +115,15 @@ function load_bar_chart_time(dataset, filter_min_date, filter_max_date) {
     
         var new_bars = bars.enter().append("rect")
             .attr("width", x.bandwidth())
-            .attr("fill", "steelblue")
+            .attr("fill", map_color[show_attr])
 
         new_bars.merge(bars)
             .transition().duration(speed)
             .attr("width", x.bandwidth())
                 .attr("x", d => x(d.state))
-                .attr("y", d => y(d.new_case))
-                .attr("height", d => height - margin.bottom - y(d.new_case))
+                .attr("y", d => y(d[attr]))
+                .attr("height", d => height - margin.bottom - y(d[attr]))
+                .attr("opacity", d => `${color_scale(d[attr])}%`)
 
         var text = svg.selectAll(".text-number")
             .data(filtered_data, d => d.state);
@@ -116,10 +136,10 @@ function load_bar_chart_time(dataset, filter_min_date, filter_max_date) {
             .merge(text)
         .transition().duration(speed)
             .attr("transform", function(d){
-                return `translate(${x(d.state) + x.bandwidth() / 2 +1},${y(d.new_case) - 5}) rotate(-90)` 
+                return `translate(${x(d.state) + x.bandwidth() / 2 +1},${y(d[attr]) - 5}) rotate(-90)` 
             })
             .attr("font-size", "10px")
-            .text(d => d.new_case);
+            .text(d => d[attr]);
     }
     //-----------------------------------------------------------------------------
     var select = d3.select("#date")
@@ -140,14 +160,17 @@ function load_bar_chart_time(dataset, filter_min_date, filter_max_date) {
 };
 
 
-
-function load_bar_chart_period(dataset, filter_min_date, filter_max_date) {
-    var keys_p = ['tot_death', 'tot_diff'];
-
+function load_bar_chart_period(dataset) {
+    var attr = map_attr[show_attr];
     var time_parse = d3.timeParse('%Y/%m/%d');
     var dates = [];
     var states = [];
-    var x, y, z,max_tot_cases, svg, xAxis, yAxis;
+    var x, y, color_scale, max_new_cases, svg, xAxis, yAxis;
+    var map_color = { 
+        'conf_cases': 'darkorange',
+        'conf_death': 'steelblue',
+        'vac_cnt': 'forestgreen'
+    };
 
     //-------------------------------------------------------------------------------------------------------------------------
     data=dataset;
@@ -159,14 +182,15 @@ function load_bar_chart_period(dataset, filter_min_date, filter_max_date) {
 	.enter().append("option")
 		.text(d => d)
     
-    max_tot_cases = d3.max(data, function(d){return +d['tot_cases'];});
+    max_new_cases = d3.max(data, function(d){return +d[attr];});
+    min_new_cases = d3.min(data, function(d){return +d[attr];});
 
     svg = d3.select("#secondary_svg"),
-    margin = {top: 65, left: 35, bottom: 0, right: 10},
+    margin = {top: 65, left: 35, bottom: 10, right: 10};
 
     // width = +svg.attr("width") - margin.left - margin.right,
     // height = +svg.attr("height") - margin.top - margin.bottom;
-    width = 700 - margin.left - margin.right,
+    width = 700 - margin.left - margin.right;
     height = 660 - margin.top - margin.bottom;
 
 	x = d3.scaleBand()
@@ -176,6 +200,9 @@ function load_bar_chart_period(dataset, filter_min_date, filter_max_date) {
 	y = d3.scaleLinear()
 		.rangeRound([height - margin.bottom, margin.top])
 
+    color_scale = d3.scaleLinear()
+        .range([30, 100]);
+
 	xAxis = svg.append("g")
 		.attr("transform", `translate(0,${height - margin.bottom})`)
 		.attr("class", "x-axis")
@@ -184,26 +211,21 @@ function load_bar_chart_period(dataset, filter_min_date, filter_max_date) {
 		.attr("transform", `translate(${margin.left},0)`)
 		.attr("class", "y-axis")
 
-	z = d3.scaleOrdinal()
-		.range([ "darkorange","steelblue"])
-		.domain(keys_p);
-
     updateChart(filter_min_date, 0)
 
 
     //-----------------------------------------------------------------------------
     function updateChart(input, speed) {
-   
-        // var filtered_data = data.filter(function(d) { if( d.submission_date == input) { return d; } });
+
         var filtered_data = data.filter(function(d) { if( d.date == input) { return d; } });
 
 
-        filtered_data.forEach(function(d) {
-            if (d.tot_cases == NaN) {d.tot_cases = 0;}
-            if (d.tot_death == NaN) {d.tot_death = 0;}
-            d.tot_diff = d.tot_cases - d.tot_death
-            return d
-        })
+        // filtered_data.forEach(function(d) {
+        //     if (d.new_case == NaN) {d.new_case = 0;}
+        //     if (d.new_death == NaN) {d.new_death = 0;}
+        //     d.new_diff = d.new_case - d.new_death
+        //     return d
+        // })
 
         // filtered_data.sort(d3.select("#sort").property("checked")
         //     ? (a, b) => b.tot_cases - a.tot_cases
@@ -211,12 +233,17 @@ function load_bar_chart_period(dataset, filter_min_date, filter_max_date) {
 
         //Axis
         x.domain(filtered_data.map(d => d.state));
-        y.domain([0,max_tot_cases]);
+        y.domain([0,max_new_cases]);
+        color_scale.domain([min_new_cases, max_new_cases]);
 
         svg.selectAll(".x-axis")
             .transition()
             .duration(speed)
-            .call(d3.axisBottom(x).tickSizeOuter(0));
+            .call(d3.axisBottom(x).tickSizeOuter(0))
+                .selectAll("text")
+                .attr("font-size", "8px")
+                .attr("transform", "translate(-10,0)rotate(-45)")
+                .style("text-anchor", "end");
 
         svg.selectAll(".y-axis")
             .transition()
@@ -224,34 +251,22 @@ function load_bar_chart_period(dataset, filter_min_date, filter_max_date) {
             .call(d3.axisLeft(y).ticks(null, "s"));
         //Axis---------------------------------------------------------
 
-        var group = svg.selectAll("g.layer")
-            .data(d3.stack().keys(keys_p)(filtered_data), d => d.key)
+        var bars = svg.selectAll("rect")
+            .data(filtered_data);
 
-        group.exit().remove()
+        bars.exit().remove();
+    
+        var new_bars = bars.enter().append("rect")
+            .attr("width", x.bandwidth())
+            .attr("fill", map_color[show_attr])
 
-        group.enter().append("g")
-            .classed("layer", true)
-            .attr("fill", d => z(d.key));
-
-        var bars = svg.selectAll("g.layer").selectAll("rect")
-            .data(d => d, e => e.data.state);
-
-        bars.exit().remove()
-        
-        bars.enter().append("rect")
-            .attr("width", x.bandwidth()*.8)
-            .merge(bars)
-        .transition().duration(speed)
-            .attr("x", d => x(d.data.state))
-            .attr("y", function(d) {
-
-                // console.log( "ddddddd"+d[1]);
-                // console.log( "yyyyyyy"+d);
-                return  y(d[1]);
-            })
-            
-            // d => y(d[1]))
-            .attr("height", d => y(d[0]) - y(d[1])) //d[0] is tot_death, d[1] is tot_diff
+        new_bars.merge(bars)
+            .transition().duration(speed)
+            .attr("width", x.bandwidth())
+                .attr("x", d => x(d.state))
+                .attr("y", d => y(d[attr]))
+                .attr("height", d => height - margin.bottom - y(d[attr]))
+                .attr("opacity", d => `${color_scale(d[attr])}%`)
 
         var text = svg.selectAll(".text-number")
             .data(filtered_data, d => d.state);
@@ -264,10 +279,10 @@ function load_bar_chart_period(dataset, filter_min_date, filter_max_date) {
             .merge(text)
         .transition().duration(speed)
             .attr("transform", function(d){
-                return `translate(${x(d.state) + x.bandwidth() / 2 +1},${y(d.tot_cases) - 5}) rotate(-90)` 
+                return `translate(${x(d.state) + x.bandwidth() / 2 +1},${y(d[attr]) - 5}) rotate(-90)` 
             })
             .attr("font-size", "10px")
-            .text(d => d.tot_cases);
+            .text(d => d[attr]);
     }
     //-----------------------------------------------------------------------------
     var select = d3.select("#date")
