@@ -1,6 +1,6 @@
 var keys = ['tot_death', 'diff'];
-var display_date_format = d3.timeFormat('%m/%d/%Y');
-var time_parse = d3.timeParse('%m/%d/%Y');
+var display_date_format = d3.timeFormat('%Y/%m/%d');
+var time_parse = d3.timeParse('%Y/%m/%d');
 var dates = [];
 var states = [];
 var x, y, z,max_tot_cases, svg, xAxis, yAxis;
@@ -8,9 +8,9 @@ var x, y, z,max_tot_cases, svg, xAxis, yAxis;
 var date_slider = document.getElementById("date-slider");
 var date_slider_output = document.getElementById("slider-show-date");
 
-d3.csv('../dataset/state-time.csv').then(function(dataset) {
+d3.csv('../dataset/merge.csv').then(function(dataset) {
     data=dataset;
-     dates = [...new Set(data.map(function(d) { return d.submission_date; }).sort(function(a, b) {return  d3.ascending(time_parse(a),time_parse(b));}))];
+     dates = [...new Set(data.map(function(d) { return d.date; }).sort(function(a, b) {return  d3.ascending(time_parse(a),time_parse(b));}))];
      states = [...new Set(data.sort(function(a, b) {return  d3.ascending(a.state, b.state);}).map(function(d) { return d.state; }))]
     
 	var options = d3.select("#date").selectAll("option")
@@ -45,12 +45,12 @@ d3.csv('../dataset/state-time.csv').then(function(dataset) {
 		.domain(keys);
         
 
-    updateChart(dates[date_slider.value], 0)
+    // updateChart(dates[date_slider.value], 0)
 });
 
 //-----------------------------------------------------------------------------
 function updateChart(input, speed) {
-    var filtered_data = data.filter(function(d) { if( d.submission_date == input) { return d; } });
+    var filtered_data = data.filter(function(d) { if( d.date == input) { return d; } });
 
     filtered_data.forEach(function(d) {
         if (d.tot_cases == NaN) {d.tot_cases = 0;}
