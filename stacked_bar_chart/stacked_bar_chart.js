@@ -26,10 +26,13 @@ function load_stacked_bar_chart(dataset, filter_min_date, filter_max_date) {
     
     max_tot_cases = d3.max(data, function(d){return +d['tot_cases'];});
 
-    svg = d3.select("#secondary_chart"),
-		margin = {top: 5, left: 5, bottom: 0, right: 0},
-		width = +svg.attr("width") - margin.left - margin.right,
-		height = +svg.attr("height") - margin.top - margin.bottom;
+    svg = d3.select("#secondary_svg"),
+    margin = {top: 5, left: 35, bottom: 0, right: 10},
+
+    // width = +svg.attr("width") - margin.left - margin.right,
+    // height = +svg.attr("height") - margin.top - margin.bottom;
+    width = 700 - margin.left - margin.right,
+    height = 600 - margin.top - margin.bottom;
 
 	x = d3.scaleBand()
 		.range([margin.left, width - margin.right])
@@ -56,7 +59,7 @@ function load_stacked_bar_chart(dataset, filter_min_date, filter_max_date) {
 
     //-----------------------------------------------------------------------------
     function updateChart(input, speed) {
-        console.log(input)
+        console.log("input"+width+","+height)
         // var filtered_data = data.filter(function(d) { if( d.submission_date == input) { return d; } });
         var filtered_data = data.filter(function(d) { if( d.date == input) { return d; } });
 
@@ -120,8 +123,9 @@ function load_stacked_bar_chart(dataset, filter_min_date, filter_max_date) {
             .merge(text)
         .transition().duration(speed)
             .attr("transform", function(d){
-                return `translate(${x(d.state) + x.bandwidth() / 2 +1},${y(d.tot_cases) - 5}) rotate(-75)` 
+                return `translate(${x(d.state) + x.bandwidth() / 2 +1},${y(d.tot_cases) - 5}) rotate(-90)` 
             })
+            .attr("font-size", "10px")
             .text(d => d.tot_cases);
     }
     //-----------------------------------------------------------------------------
