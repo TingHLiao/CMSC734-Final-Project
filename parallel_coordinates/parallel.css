@@ -155,12 +155,13 @@ html, body {
   }
   .row {
     cursor: pointer;
-    /* width: 50%; */
+    width: 50%;
+    float: left;
     /* width: 350px; */
   }
   .row:hover {
     font-size: 16px;
-    line-height: 1.3em;
+    /* line-height: 1.3em; */
   }
   /* .column {
     float: left;
@@ -261,6 +262,8 @@ html, body {
     border-radius: 50%;
     display: block;
     top: -5px;
+    margin-left: -8px;
+    /* left: -5px; */
     height: 18px;
     width: 18px;
     position: absolute;
