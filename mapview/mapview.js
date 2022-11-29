@@ -73,14 +73,18 @@ function draw_map(dataset, attr) {
 
     counts = {};
     // sum up the filtered data
-    for(var i = 0; i < dataset.length; i++) {
-        var d = dataset[i];
-        if(counts[d.state] == undefined) {
-            counts[d.state] = 0;
-        }
-        counts[d.state] += +d[attr];
-    }
 
+    dataset_rollup = d3.nest()
+        .key(function(d) {return d.state;})
+        .rollup(function(d) {
+            return d3.sum(d, function(e) {return +e[attr];})
+        })
+        .entries(dataset);
+    
+    counts = {};
+    for(var i = 0; i < dataset_rollup.length; i++) {
+        counts[dataset_rollup[i].key] = dataset_rollup[i].value;
+    }
     // load into states dict for geoJson
     for(var i = 0; i < states.features.length; i++) {
         state_name = states.features[i].properties['NAME'];

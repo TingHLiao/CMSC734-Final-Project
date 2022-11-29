@@ -49,8 +49,15 @@ Promise.all([
 function update() {
     // filter dataset
     filtered_dataset = dataset.filter(function(d, i) {
-        return d.date >= filter_min_date && d.date <= filter_max_date;
+        var date_bool = d.date >= filter_min_date && d.date <= filter_max_date;
+        var state_bool = true;
+        if(select_all_states == false) {
+            state_bool = select_certain_states.includes(d.state_abbrev);
+            //console.log(state_bool);
+        }
+        return date_bool && state_bool;
     });
+    console.log(filtered_dataset);
     show_map(show_attr);
     show_secondary_view();
 }
@@ -196,3 +203,24 @@ function show_secondary_view() {
     }
 }
 /* secondary view end */
+
+var select_all_states = true;
+var select_certain_states = [];
+function changeStates(sel) {
+    select_certain_states = [];
+    for(var i = 0; i < sel.options.length; i++) {
+        var opt = sel.options[i];
+
+        if(opt.selected) {
+            select_certain_states.push(opt.value);
+        }
+    }
+    if(select_certain_states.length == 0) {
+        select_all_states = true;
+    } else {
+        select_all_states = false;
+    }
+    console.log(select_all_states, select_certain_states);
+    update();
+
+}

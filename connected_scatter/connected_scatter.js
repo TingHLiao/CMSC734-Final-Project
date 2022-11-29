@@ -205,7 +205,8 @@ dataset_rollup = d3.nest()
     };
   })
   .entries(dataset);
-console.log(dataset_rollup);
+//console.log(dataset_rollup);
+
 ConnectedScatterplot(dataset_rollup, {
     x: d => d.value.x,
     y: d => d.value.y,
