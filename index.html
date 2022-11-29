@@ -26,12 +26,13 @@
                     <div class="slider-and-state-selector">
                         <div class="slider" id="slider">
                             <div>
-                                <p>please select how </p>
+                                <!-- <p>please select how </p> -->
                                 <input type="radio" name="radio-slider" id="radio-time" onclick="changeSliderMode('time'); show_secondary_view_options();" checked="checked" />
                                 <label>Time</label>
                                 <input type="radio" name="radio-slider" id="radio-period" onclick="changeSliderMode('period'); show_secondary_view_options();"/>
                                 <label>Period</label>
                             </div>
+                            
                             <div style="position: relative">
                                 <div id="slider-value1" class="slider-value"></div>
                                 <div id="slider-value2" class="slider-value"></div>
@@ -42,6 +43,7 @@
 
                         <!-- ------------------------- state selector ------------------------- -->
                         <div class="state-selector"> 
+                            <p>Select specific state(s):</p>
                             <select multiple="multiple">
                                 <option value="AK">Alaska</option>
                                 <option value="AL">Alabama</option>
