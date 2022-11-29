@@ -56,8 +56,6 @@ function load_connected_scatter(dataset, xaxis, yaxis) {
     for(var i = 0; i < dataset_rollup.length; i++) {
       X = X.concat(d3.map(dataset_rollup[i].values, d=>d.value.x));
       Y = Y.concat(d3.map(dataset_rollup[i].values, d=>d.value.y));
-      console.log(X);
-      console.log(Y);
       dataset_lines.push(dataset_rollup[i].values);
     }
 
@@ -68,8 +66,6 @@ function load_connected_scatter(dataset, xaxis, yaxis) {
   for(var i = 0; i < dataset_lines.length; i++) {
     var x = d3.map(dataset_lines[i], d=>d.value.x);
     var y = d3.map(dataset_lines[i], d=>d.value.y);
-    console.log(x);
-    console.log(y);
     items = add_line(
       X=x, 
       Y=y, 
