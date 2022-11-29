@@ -99,6 +99,11 @@ html, body {
     width: 31.3%;
     margin: 0 1%;
   }
+  .two-third {
+    width: 55.6%;
+    margin: 0 1%;
+    float: left;
+  }
   .half {
     width: 48%;
     margin: 0 1%;
@@ -150,11 +155,21 @@ html, body {
   }
   .row {
     cursor: pointer;
+    /* width: 50%; */
+    /* width: 350px; */
   }
   .row:hover {
     font-size: 16px;
     line-height: 1.3em;
   }
+  /* .column {
+    float: left;
+    width: 50%;
+  }
+  .column-right {
+    float: right;
+    width: 50%;
+  } */
   .off {
     color: #999;
   }
@@ -238,4 +253,18 @@ html, body {
   }
   .dark ::-webkit-scrollbar-thumb {
     background: #444;
+  }
+
+  #slider-range .ui-slider-handle {
+    outline: 0;
+    background: rgb(25, 20, 100);
+    border-radius: 50%;
+    display: block;
+    top: -5px;
+    height: 18px;
+    width: 18px;
+    position: absolute;
+  }
+  #slider-range .ui-slider-range {
+    height: 10px;
   }

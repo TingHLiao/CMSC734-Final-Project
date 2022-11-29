@@ -17,39 +17,41 @@
   </div>
   <div id="wrap">
     <div class="third" id="controls">
-      <!-- <div class="little-box">
-        <h3>Controls</h3>
+      <h3>Controls</h3>
+      <p>time slider</p>
+      <div class="little-box" style="margin: 50px 0px 0px 0px; ">
         <p>
-          <strong>Brush</strong>: Drag vertically along an axis.<br/>
-          <strong>Remove Brush</strong>: Tap the axis background.<br/>
           <strong>Reorder Axes</strong>: Drag a label horizontally.<br/>
           <strong>Invert Axis</strong>: Tap an axis label.<br/>
           <strong>Remove Axis</strong>: Drag axis label to the left edge.<br/>
         </p>
-      </div> -->
+      </div>
+      <div id="slider" style="margin: 1% 1%; position: relative; height: 20px;">
+        <div >
+            <div id="slider-value1" class="slider-value"></div>
+            <!-- width: 65px; height: 20px; -->
+            <div id="slider-value2" class="slider-value"></div>
+            <div id="slider-range" class="slidecontainer" style="height: 10px;"></div>
+            <div id="slider-single" class="slidecontainer"></div>
+        </div>
+      </div>
     </div>
-    <div  class="third">
+    <!-- <div  class="third">
       <small>
       </small>
       <h3>States</h3>
       <p id="legend">
       </p>
-    </div>
-    <div class="third">
-      <div id="slider" style="width: 300px;">
-        <div>
-            <input type="radio" name="radio-slider" id="radio-time" onclick="changeSliderMode('time')" checked="checked" />
-            <label>Time</label>
-            <input type="radio" name="radio-slider" id="radio-period" onclick="changeSliderMode('period')"/>
-            <label>Period</label>
-        </div>
-        <div style="position: relative">
-            <div id="slider-value1" class="slider-value"></div>
-            <div id="slider-value2" class="slider-value"></div>
-            <div id="slider-range" class="slidecontainer"></div>
-            <div id="slider-single" class="slidecontainer"></div>
-        </div>
-     </div>
+    </div> -->
+    <div class="two-third" style="margin: 0px 0px 0px 70px; ">
+     <!-- <div id="slider-range" style="width: 680px; border: 1px solid #777;">
+          <p></p>
+          <p id="slider_min"></p>
+          <p id="slider_max"></p>
+      </div> -->
+     <h3>States</h3>
+      <p id="legend">
+      </p>
     </div>
   </div>
   </body>
@@ -62,4 +64,13 @@
   <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
   <script src="parallel.js"></script>
   <script src="../utils/slider.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+  <script src="http://d3js.org/d3.v5.min.js"></script>
+  <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+  <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+  <script src="../utils/d3-tip.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
 </html>

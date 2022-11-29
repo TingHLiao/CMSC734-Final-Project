@@ -1,3 +1,8 @@
+// window.onload = function() {
+//   console.log('load');
+//   changeSliderMode('period');
+// };
+
 var width = document.body.clientWidth,
     height = d3.max([document.body.clientHeight-540, 240]);
 
@@ -111,7 +116,7 @@ var svg = d3.select("svg")
 var filter_min_date;
 var filter_max_date;
 var date_interpolate_func;
-var date_format = d3.timeFormat('%m/%d/%Y');
+var date_format = d3.timeFormat('%Y/%m/%d');
 function sliderSlidingListener(values) {
     updateDateRange(values);
 
@@ -130,29 +135,24 @@ Promise.all([
     d3.csv('../dataset/merge.csv')
 ]).then(function (data) {
     dataset = data[0];
-
-    // time format 
     var time_parse = d3.timeParse('%Y/%m/%d');
-    dataset.forEach(function(d, i) {
-        dataset[i].date = time_parse(d.date);
-    });
-    filter_min_date = time_parse('2020/01/22'); //d3.min(dataset, function(d) {return d.date;});
+    filter_min_date = '2020/01/22';
     filter_max_date = d3.max(dataset, function(d) {return d.date;});
-    date_interpolate_func = d3.interpolateDate(filter_min_date, filter_max_date);
-
+    date_interpolate_func = d3.interpolateDate(time_parse(filter_min_date), time_parse(filter_max_date));
+    changeSliderMode("period");
+    
     update();
 });
 function update() {
-    // console.log(Object.keys(yscale).length !== 0)
-    // filter dataset
     var filtered_dataset = dataset.filter(function(d, i) {
         return d.date >= filter_min_date && d.date <= filter_max_date;
     });
+  
     data = [];
     for (var key in colors) {
         data.push({"state": key})
     };
-    // console.log(data)
+
     all_data = filtered_dataset.map(function(d) {
         for (var k in d) {
             if (!_.isNaN(filtered_dataset[0][k] - 0) && (k == 'new_case' || k == 'new_death' || k == 'daily_vaccinations' || k == 'inpatient_beds_used' || k == 'inpatient_beds_used_covid' || k == 'state')) {
@@ -172,7 +172,7 @@ function update() {
                     }
                 }
             }}
-            return d;
+        return d;
    });
 
     // Extract the list of numerical dimensions and create a scale for each.
@@ -409,9 +409,9 @@ function unhighlight() {
 
 function invert_axis(d) {
   // save extent before inverting
-  if (!yscale[d].brush.empty()) {
-    var extent = yscale[d].brush.extent();
-  }
+  // if (!yscale[d].brush.empty()) {
+  //   var extent = yscale[d].brush.extent();
+  // }
   if (yscale[d].inverted == true) {
     yscale[d].range([h, 0]);
     d3.selectAll('.label')
@@ -425,7 +425,7 @@ function invert_axis(d) {
       .style("text-decoration", "underline");
     yscale[d].inverted = true;
   }
-  return extent;
+  return null;
 }
 
 function path(d, ctx, color) {
@@ -481,10 +481,14 @@ function brush() {
 
   // include empty groups
   _(colors).each(function(v,k) { tallies[k] = tallies[k] || []; });
-
   legend
     .style("text-decoration", function(d) { return _.contains(excluded_groups,d) ? "line-through" : null; })
     .attr("class", function(d) {
+      // if((d[0].charCodeAt(0)-'M'.charCodeAt(0))<= 0){
+      //   return (tallies[d].length > 0)
+      //     ? "row column"
+      //     : "row off column";
+      // }
       return (tallies[d].length > 0)
            ? "row"
            : "row off";
