@@ -93,7 +93,7 @@ secondary_options = {
             'x': ['h', 'i', 'j'],
             'y': ['k', 'l', 'm'],
         },
-        'stacked bar chart': {
+        'bar chart': {
             'x': ['o', 'p', 'q'],
             'y': [],
         },
@@ -111,7 +111,7 @@ secondary_options = {
             'x': ['h', 'i', 'j'],
             'y': ['k', 'l', 'm'],
         },
-        'stacked bar chart': {
+        'bar chart': {
             'x': ['o', 'p', 'q'],
             'y': [],
         },
@@ -198,8 +198,8 @@ function show_secondary_view() {
     if(select_secondary_view == 'connected scatter plot') {
         load_connected_scatter(filtered_dataset, select_secondary_x_axis, select_secondary_y_axis);
     }
-    else if (select_secondary_view == 'stacked bar chart') {
-        load_stacked_bar_chart(filtered_dataset, filter_min_date, filter_max_date);
+    else if (select_secondary_view == 'bar chart') {
+        load_bar_chart(filtered_dataset, filter_min_date, filter_max_date);
     }
 }
 /* secondary view end */
