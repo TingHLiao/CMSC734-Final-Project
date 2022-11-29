@@ -140,47 +140,57 @@ Promise.all([
     filter_max_date = d3.max(dataset, function(d) {return d.date;});
     date_interpolate_func = d3.interpolateDate(time_parse(filter_min_date), time_parse(filter_max_date));
     changeSliderMode("period");
-    
+
+    // handle = d3.selectAll('span').style("left", "-5px");
+    // console.log(handle.style());
+    var i = 0;
+    for (var key in colors) {
+      if (i > 10){
+        excluded_groups.push(key);
+      }
+      i++;
+    };
+    // console.log(excluded_groups);
     update();
 });
 function update() {
-    var filtered_dataset = dataset.filter(function(d, i) {
-        return d.date >= filter_min_date && d.date <= filter_max_date;
-    });
-  
-    data = [];
-    for (var key in colors) {
-        data.push({"state": key})
-    };
+  var filtered_dataset = dataset.filter(function(d, i) {
+      return d.date >= filter_min_date && d.date <= filter_max_date;
+  });
 
-    all_data = filtered_dataset.map(function(d) {
-        for (var k in d) {
-            if (!_.isNaN(filtered_dataset[0][k] - 0) && (k == 'new_case' || k == 'new_death' || k == 'daily_vaccinations' || k == 'inpatient_beds_used' || k == 'inpatient_beds_used_covid' || k == 'state')) {
-                d[k] = parseFloat(d[k]) || 0;
-            }
-            if(k == 'new_case' || k == 'new_death' || k == 'daily_vaccinations' || k == 'inpatient_beds_used' || k == 'inpatient_beds_used_covid'){
-                
-                for(var i = 0; i < data.length; i++) {
-                    // console.log(data_test[i].state, d.state)
-                    // assert(false)
-                    if(data[i].state == d.state) {
-                        if(data[i][k] == undefined) {
-                            data[i][k] = 0;
-                        }
-                        data[i][k] += +d[k];
-                        // console.log(d[k])
+  data = [];
+  for (var key in colors) {
+      data.push({"state": key})
+  };
+
+  all_data = filtered_dataset.map(function(d) {
+      for (var k in d) {
+        if (!_.isNaN(filtered_dataset[0][k] - 0) && (k == 'new_case' || k == 'new_death' || k == 'daily_vaccinations' || k == 'inpatient_beds_used' || k == 'inpatient_beds_used_covid' || k == 'state')) {
+            d[k] = parseFloat(d[k]) || 0;
+        }
+        if(k == 'new_case' || k == 'new_death' || k == 'daily_vaccinations' || k == 'inpatient_beds_used' || k == 'inpatient_beds_used_covid'){
+            
+            for(var i = 0; i < data.length; i++) {
+                // console.log(data_test[i].state, d.state)
+                // assert(false)
+                if(data[i].state == d.state) {
+                    if(data[i][k] == undefined) {
+                        data[i][k] = 0;
                     }
+                    data[i][k] += +d[k];
+                    // console.log(d[k])
                 }
-            }}
-        return d;
-   });
+            }
+        }}
+      return d;
+  });
 
-    // Extract the list of numerical dimensions and create a scale for each.
-    xscale.domain(dimensions = d3.keys(data[0]).filter(function(k) {
-        return (_.isNumber(data[0][k])) && (yscale[k] = d3.scaleLinear()
-        .domain(d3.extent(data, function(d) { return +d[k]; }))
-        .range([h, 0]));
-    }).sort());
+  // Extract the list of numerical dimensions and create a scale for each.
+  xscale.domain(dimensions = d3.keys(data[0]).filter(function(k) {
+      return (_.isNumber(data[0][k])) && (yscale[k] = d3.scaleSqrt()
+      .domain(d3.extent(data, function(d) { return +d[k]; }))
+      .range([h, 0]));
+  }).sort());
 
     // Add a group element for each dimension.
   var g = svg.selectAll(".dimension")
@@ -229,6 +239,7 @@ function update() {
 
       // rerender
       d3.select("#foreground").style("opacity", null);
+      
       brush();
       delete this.__dragged__;
       delete this.__origin__;
@@ -311,10 +322,12 @@ function create_legend(colors,brush) {
         if (_.contains(excluded_groups, d)) {
           d3.select(this).attr("title", "Hide group")
           excluded_groups = _.difference(excluded_groups,[d]);
+          // console.log(excluded_groups)
           brush();
         } else {
           d3.select(this).attr("title", "Show group")
           excluded_groups.push(d);
+          // console.log(excluded_groups)
           brush();
         }
       });
