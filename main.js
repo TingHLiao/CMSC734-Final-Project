@@ -97,8 +97,8 @@ secondary_options = {
     },
     'period': {
         'connected scatter plot': {
-            'x': ['a', 'b', 'c'],
-            'y': ['e', 'f', 'g'],
+            'x': ['new_case', 'new_death', 'total_vaccinations', 'daily_vaccinations'],
+            'y': ['new_death', 'new_case', 'total_vaccinations', 'daily_vaccinations'],
         },
         'scatter plot': {
             'x': ['h', 'i', 'j'],
@@ -171,7 +171,6 @@ function change_secondary_view() {
     select_secondary_view = selected;
 
     change_secondary_axis();
-    show_secondary_view();
 }
 
 function change_secondary_axis() {
@@ -183,13 +182,14 @@ function change_secondary_axis() {
 
     select_secondary_x_axis = selected_x;
     select_secondary_y_axis = selected_y;
+    show_secondary_view();
 }
 
 function show_secondary_view() {
     console.log(select_secondary_view, select_secondary_x_axis, select_secondary_y_axis);
     d3.select('#secondary_svg').selectAll('*').remove();
     if(select_secondary_view == 'connected scatter plot') {
-        load_connected_scatter(filtered_dataset);
+        load_connected_scatter(filtered_dataset, select_secondary_x_axis, select_secondary_y_axis);
     }
 }
 /* secondary view end */
