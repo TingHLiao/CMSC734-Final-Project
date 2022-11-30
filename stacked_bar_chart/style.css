@@ -15,11 +15,14 @@ body {
 }
 
 
-.rect {
-  fill: cadetblue;
+.bar-chart-rect rect {
+  fill: steelblue;
+  opacity: 50%;
 }
 
-.rect:hover {
+.bar-chart-rect:hover rect {
+  opacity: 100%;
+  stroke-width: 2px;
   stroke: black;
 }
 
@@ -73,3 +76,22 @@ body {
   background: #04AA6D;
   cursor: pointer;
 }
+
+.bar-chart-rect text {
+  text-anchor: middle;
+    font-size: 12px;
+    pointer-events: none;
+    fill: #555;
+    opacity: 0;
+}
+
+.bar-chart-rect:hover text {
+    opacity: 1;
+}
+
+/* 
+.rect:hover circle {
+  fill: orange;
+  stroke: black;
+  stroke-width: 2px;
+} */

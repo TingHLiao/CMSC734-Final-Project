@@ -78,7 +78,7 @@ function load_bar_chart_time(dataset) {
 
         var filtered_data = data.filter(function(d) { if( d.date == input) { return d; } });
 
-
+        
         // filtered_data.forEach(function(d) {
         //     if (d.new_case == NaN) {d.new_case = 0;}
         //     if (d.new_death == NaN) {d.new_death = 0;}
@@ -109,39 +109,41 @@ function load_bar_chart_time(dataset) {
             .duration(speed)
             .call(d3.axisLeft(y).ticks(null, "s"));
         //Axis---------------------------------------------------------
-
-        var bars = svg.selectAll("rect")
+        var bars = svg.selectAll(".bar-chart-rect")
             .data(filtered_data);
 
         bars.exit().remove();
-    
-        bars.enter().append("rect")
+
+        var barsEnter = bars.enter()
+            .append("g")
+            .attr("class", "bar-chart-rect")
+
+
+        barsEnter.append('rect')
+            .attr("class", "bar-label-group-bar")
             .attr("width", x.bandwidth())
+            .attr("x", d => x(d.state))
             .attr("fill", map_color[show_attr])
+        
+            barsEnter.append('text')
+                .attr("class","bar-label-group-label")
 
-        .merge(bars)
-            .transition().duration(speed)
-            .attr("width", x.bandwidth())
-                .attr("x", d => x(d.state))
-                .attr("y", d => y(d[attr]))
-                .attr("height", d => height - margin.bottom - y(d[attr]))
-                .attr("opacity", d => `${color_scale(d[attr])}%`)
-
-        var text = svg.selectAll(".text-number")
-            .data(filtered_data, d => d.state);
-
-        text.exit().remove()
-
-        text.enter().append("text")
-            .attr("class", "text-number")
-            // .attr("text-anchor", "left")
-            .merge(text)
+        bars = bars.merge(barsEnter)
         .transition().duration(speed)
-            .attr("transform", function(d){
-                return `translate(${x(d.state) + x.bandwidth() / 2 +3},${y(d[attr]) - 5}) rotate(-90)` 
-            })
-            .attr("font-size", "10px")
-            .text(d => d[attr]);
+
+        bars.select('.bar-label-group-bar').attr("width", x.bandwidth())
+            .attr("x", d => x(d.state))
+            .attr("y", d => y(d[attr]))
+            .attr("height", d => height - margin.bottom - y(d[attr]))
+            .attr("opacity", d => `${color_scale(d[attr])}%`)
+
+        bars.select('.bar-label-group-label')
+                .attr("transform", function(d){
+                    return `translate(${x(d.state) + x.bandwidth() / 2 +1},${y(d[attr]) - 10}) ` 
+                })
+                .text(d => d[attr]);
+
+
     }
     var checkbox = d3.select("#sort")
         .on("click", function() {

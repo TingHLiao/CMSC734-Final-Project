@@ -159,3 +159,31 @@ body {
 .show-when-hover {
     opacity: 0%;
 }
+
+
+
+
+/* -------------- bar chart ----------- */
+.bar-chart-rect rect {
+    /* fill: steelblue; */
+    /* opacity: 50%; */
+}
+  
+.bar-chart-rect:hover rect {
+    opacity: 100%;
+    stroke-width: 2px;
+    stroke: black;
+}
+
+.bar-chart-rect text {
+    text-anchor: middle;
+      font-size: 13px;
+      pointer-events: none;
+      fill: rgb(30, 30, 30);
+      background-color: black;
+      opacity: 0;
+}
+
+.bar-chart-rect:hover text {
+    opacity: 1;
+}

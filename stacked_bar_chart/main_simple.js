@@ -81,39 +81,55 @@ function updateChart(input, speed) {
         .call(d3.axisLeft(y).ticks(null, "s"));
     //Axis---------------------------------------------------------
 
-    var bars = svg.selectAll("rect")
+    var bars = svg.selectAll(".bar-chart-rect")
         .data(filtered_data);
 
     bars.exit().remove();
+
+    var barsEnter = bars.enter()
+        .append("g")
+        .attr("class", "bar-chart-rect")
+        // .attr("width", x.bandwidth())
+        // .attr("fill", "steelblue")
     
-    var new_bars = bars.enter().append("rect")
+    barsEnter.append('rect')
+        .attr("class","bar-label-group-bar")
         .attr("width", x.bandwidth())
-
-        .attr("fill", "steelblue")
-
-
-        new_bars.merge(bars)
-    .transition().duration(speed)
-    .attr("width", x.bandwidth())
         .attr("x", d => x(d.state))
-        .attr("y", d => y(d.tot_cases) )
+    barsEnter.append('text')
+        .attr("class","bar-label-group-label")
+
+    bars = bars.merge(barsEnter)
+        // .transition().duration(speed)
+
+    bars.select('.bar-label-group-bar').attr("width", x.bandwidth())
+        .attr("x", d => x(d.state))
+        .attr("y", d => y(d.tot_cases))
         .attr("height", d => height - margin.bottom - y(d.tot_cases))
 
-    //-----------------------------------------
-    var text = svg.selectAll(".text-number")
-        .data(filtered_data, d => d.state);
-
-    text.exit().remove()
-
-    text.enter().append("text")
-        .attr("class", "text-number")
-        // .attr("text-anchor", "left")
-        .merge(text)
-    .transition().duration(speed)
+    bars.select('.bar-label-group-label')
+    // bars.merge(barsEnter)
+        // .attr('y', -10)
+        .attr("text-anchor", "left")
         .attr("transform", function(d){
-            return `translate(${x(d.state) + x.bandwidth() / 2 +1},${y(d.tot_cases) - 5}) rotate(-75)` 
+            return `translate(${x(d.state) + x.bandwidth() / 2 +1},${y(d.tot_cases) - 5}) ` 
         })
         .text(d => d.tot_cases);
+    //-----------------------------------------
+    // var text = svg.selectAll(".text-number")
+    //     .data(filtered_data, d => d.state);
+
+    // text.exit().remove()
+
+    // text.enter().append("text")
+    //     .attr("class", "text-number")
+    //     // .attr("text-anchor", "left")
+    //     .merge(text)
+    // .transition().duration(speed)
+    //     .attr("transform", function(d){
+    //         return `translate(${x(d.state) + x.bandwidth() / 2 +1},${y(d.tot_cases) - 5}) rotate(-75)` 
+    //     })
+    //     .text(d => d.tot_cases);
 }
 //-----------------------------------------------------------------------------
 
