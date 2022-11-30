@@ -117,6 +117,12 @@ var filter_min_date;
 var filter_max_date;
 var date_interpolate_func;
 var date_format = d3.timeFormat('%Y/%m/%d');
+function set_inactive(btn) {
+  // dum funciton
+}
+function set_active(btn) {
+  // dum funciton
+}
 function sliderSlidingListener(values) {
     updateDateRange(values);
 
