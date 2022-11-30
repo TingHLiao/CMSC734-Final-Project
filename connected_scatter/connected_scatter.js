@@ -4,23 +4,24 @@ var dataset_rollup;
 var rollup_method = {
 'new_case': 'sum',
 'new_death': 'sum',
-'total_vaccinations': 'max',
 'daily_vaccinations': 'sum',
 }
 
 function rollup_func(d, xaxis, yaxis) {
-  let x_rollup = rollup_method[xaxis];
+  /*let x_rollup = rollup_method[xaxis];
   if(x_rollup == 'sum') {
     var x_func = d3.sum(d, function(e) {return +e[xaxis];})
   } else if(x_rollup == 'max') {
     var x_func = d3.max(d, function(e) {return +e[xaxis];})
-  }
-  let y_rollup = rollup_method[yaxis];
+  }*/
+  var x_func = d3.sum(d, function(e) {return +e[xaxis];});
+  /*let y_rollup = rollup_method[yaxis];
   if(y_rollup == 'sum') {
     var y_func = d3.sum(d, function(e) {return +e[yaxis];})
   } else if(y_rollup == 'max') {
     var y_func = d3.max(d, function(e) {return +e[yaxis];})
-  }
+  }*/
+  var y_func = d3.sum(d, function(e) {return +e[yaxis];});
   return {
     x: x_func,
     y: y_func,
@@ -36,6 +37,8 @@ function load_connected_scatter(dataset, xaxis, yaxis) {
   var Y = [];
   var dataset_lines = [];
   keys = [];
+  console.log(dataset);
+  console.log(xaxis, yaxis);
   if(select_all_states) {
     dataset_rollup = d3.nest()
       .key(function(d) {return d.date.slice(0, 7);})
@@ -152,20 +155,24 @@ function animate(line, path, label, I, duration=10000) {
 }
 
 function show_all_pairs(i) {
-  
-  for(var j = 0; j < line_items.length; j++) {
-    d3.select(line_items[j][2]._groups[0][i]).style('opacity', "100%");
-    d3.select(line_items[j][4]._groups[0][i]).attr('r', 6);
-    d3.select(line_items[j][4]._groups[0][i]).attr('fill', color(keys[j]));
+  if(slider_mode == 'period'){
+    for(var j = 0; j < line_items.length; j++) {
+      d3.select(line_items[j][2]._groups[0][i]).style('opacity', "100%");
+      d3.select(line_items[j][4]._groups[0][i]).attr('r', 6);
+      d3.select(line_items[j][4]._groups[0][i]).attr('fill', color(keys[j]));
+    }
   }
 }
 
 function hide_all_pairs(i) {
-  for(var j = 0; j < line_items.length; j++) {
-    d3.select(line_items[j][2]._groups[0][i]).style('opacity', "0%");
-    d3.select(line_items[j][4]._groups[0][i]).attr('r', 3);
-    d3.select(line_items[j][4]._groups[0][i]).attr('fill', '#fff');
+  if(slider_mode == 'period') {
+    for(var j = 0; j < line_items.length; j++) {
+      d3.select(line_items[j][2]._groups[0][i]).style('opacity', "0%");
+      d3.select(line_items[j][4]._groups[0][i]).attr('r', 3);
+      d3.select(line_items[j][4]._groups[0][i]).attr('fill', '#fff');
+    }
   }
+  
 }
 
 function add_line(
@@ -174,9 +181,9 @@ function add_line(
   T = [],
   O = [],
   stroke = "currentColor", // stroke color of line and dots
+  fill = "white", // fill color of dots
   r = 3, // (fixed) radius of dots, in pixels
   curve = d3.curveCatmullRom, // curve generator for the line
-  fill = "white", // fill color of dots
   strokeWidth = 2, // stroke width of line and dots
   strokeLinecap = "round", // stroke line cap of line
   strokeLinejoin = "round", // stroke line join of line
@@ -185,21 +192,34 @@ function add_line(
 ) {
   var I = d3.range(X.length);
 
+  if(X.length > 1) {
+    X = X.slice(0, -1);
+    Y = Y.slice(0, -1);
+    T = T.slice(0, -1);
+    O = O.slice(0, -1);
+    I = d3.range(X.length);
+  }
+  console.log(X, Y, T, O, I);
+
   // Construct the line generator.
-  var line = d3.line()
+  if(X.length > 1) {
+    var line = d3.line()
       .curve(curve)
       .x(i => xScale(X[i]))
       .y(i => yScale(Y[i]));
+  }
+  
 
   var svg = d3.select("#secondary_svg");
-
-  var path = svg.append("path")
-      .attr("fill", "none")
-      .attr("stroke", stroke)
-      .attr("stroke-width", strokeWidth)
-      .attr("stroke-linejoin", strokeLinejoin)
-      .attr("stroke-linecap", strokeLinecap)
-      .attr("d", line(I));
+  
+  if(X.length > 1)
+    var path = svg.append("path")
+        .attr("fill", "none")
+        .attr("stroke", stroke)
+        .attr("stroke-width", strokeWidth)
+        .attr("stroke-linejoin", strokeLinejoin)
+        .attr("stroke-linecap", strokeLinecap)
+        .attr("d", line(I));
   
   var circles = svg.append("g")
       .attr("fill", fill)
@@ -227,6 +247,9 @@ function add_line(
       .join("g")
       .classed('show-when-hover', true)
       .attr("transform", i => `translate(${xScale(X[i])},${yScale(Y[i])})`);
+
+  if(slider_mode == 'time')
+      label.classed('show-when-hover', false);
 
   if (T) label.append("text")
       .text(i => T[i])
@@ -274,6 +297,9 @@ function make_plot(
   yRange = [height - marginBottom - insetBottom, marginTop + insetTop], // [bottom, top]
   yFormat = d3.format(".2s"), // a format specifier string for the y-axis
   ) {
+
+  xDomain = [0, d3.max(X)];
+  yDomain = [0, d3.max(Y)];
 
    // Compute default domains.
   if (xDomain === undefined) xDomain = d3.extent(X);//d3.nice(...d3.extent(X), width / 80);
@@ -325,3 +351,43 @@ function make_plot(
 
 }
 
+function load_scatter(dataset, xaxis, yaxis) {
+  console.log(xaxis, yaxis);
+  var X = [];
+  var Y = [];
+  var dataset_lines = [];
+  keys = [];
+  console.log(dataset);
+  console.log(xaxis, yaxis);
+  
+  //console.log(dataset_rollup); 
+
+  
+  keys = d3.map(dataset, d=>d.state_abbrev);
+  color = d3.scaleOrdinal()
+      .domain(keys)
+      .range(d3.schemeSet2);
+    
+  X = d3.map(dataset, d=>d[xaxis]);
+  Y = d3.map(dataset, d=>d[yaxis]);
+  console.log(X);
+  console.log(Y);
+  console.log(keys);
+  make_plot(X=X, Y=Y, xLabel=xaxis, yLabel=yaxis);
+
+  line_items = [];
+  console.log(X.length);
+  for(var i = 0; i < X.length; i++) {
+    console.log(keys[i]);
+    item = add_line(
+      [X[i]], 
+      [Y[i]], 
+      [keys[i]],
+      d3.map([X[i]], d=>'top'),
+      color(keys[i]),
+      color(keys[i]),
+      5)
+    //animate(item[0], item[1], item[2], item[3]);
+    line_items.push(item);
+  }
+}

@@ -44,71 +44,31 @@ var choroScale_vac_period = d3.scaleThreshold()
 	.range(d3.schemeBuGn[9]);
 
 function stateStyle(f) {
-    if (show_attr == 'conf_cases')
-        if (filter_min_date == filter_max_date) {
-            return {
-                fillColor: choroScale_cases_time(f.properties.values[show_attr]),
-                weight: 2,
-                opacity: 1,
-                color: 'white',
-                dashArray: '3',
-                fillOpacity: 0.7
-            };
-        }
-        else {
-            return {
-                fillColor: choroScale_cases_period(f.properties.values[show_attr]),
-                weight: 2,
-                opacity: 1,
-                color: 'white',
-                dashArray: '3',
-                fillOpacity: 0.7
-            };
-        }
-    else if (show_attr == 'conf_death'){
-        if (filter_min_date == filter_max_date) {
-            return {
-                fillColor: choroScale_death_time(f.properties.values[show_attr]),
-                weight: 2,
-                opacity: 1,
-                color: 'white',
-                dashArray: '3',
-                fillOpacity: 0.7
-            };
-        }
-        else {
-            return {
-                fillColor: choroScale_death_period(f.properties.values[show_attr]),
-                weight: 2,
-                opacity: 1,
-                color: 'white',
-                dashArray: '3',
-                fillOpacity: 0.7
-            };
-        }
-        
+    var color_style = null;
+    if(show_attr == 'conf_cases') {
+        if (slider_mode == 'time') color_style = choroScale_cases_time;
+        else color_style = choroScale_cases_period;
+    } else if (show_attr == 'conf_death') {
+        if (slider_mode == 'time') color_style = choroScale_death_time;
+        else color_style = choroScale_death_period;
+    } else if (show_attr == 'vac_cnt') {
+        if (slider_mode == 'time') color_style = choroScale_vac_time;
+        else color_style = choroScale_vac_period;
+    } else if (show_attr == 'exc_death') {
+        if (slider_mode == 'time') color_style = choroScale_death_time;
+        else color_style = choroScale_death_period;
+    } else if (show_attr == 'inpatient') {
+        if (slider_mode == 'time') color_style = choroScale_vac_time;
+        else color_style = choroScale_vac_period;
     }
-    else
-        if (filter_min_date == filter_max_date) {
-            return {
-                fillColor: choroScale_vac_time(f.properties.values[show_attr]),
-                weight: 2,
-                opacity: 1,
-                color: 'white',
-                dashArray: '3',
-                fillOpacity: 0.7
-            }
-        }
-        else {
-            return {
-                fillColor: choroScale_vac_period(f.properties.values[show_attr]),
-                weight: 2,
-                opacity: 1,
-                color: 'white',
-                dashArray: '3',
-                fillOpacity: 0.7
-            }
-        }
+    return {
+        fillColor: color_style(f.properties.values[show_attr]),
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7
+    };
 }
 
 
@@ -124,10 +84,19 @@ info.onAdd = function (map) {
 };
 
 info.update = function (props) {
-    // console.log(props)
-    var [key, value] = props ? Object.entries(props.values) : [null, null];
-    if(value  == null ) value=0;
-    const contents = props ? `<b>${props.NAME}</b><br />${key[1]}` : 'Hover over a state';
+    
+    if(props == undefined) return;
+    //console.log(show_attr);
+    //var [key, value] = props ? Object.entries(props.values) : [null, null];
+    //if(value  == null ) value=0;
+    //console.log(key);
+    //key = props['NAME'];
+    value = props.values[show_attr];
+    //console.log(value);
+    //console.log(props.values);
+    ///if(props)
+    //console.log(props.NAME, props.values);
+    const contents = props ? `<b>${props.NAME}</b><br />${value}` : 'Hover over a state';
     this._div.innerHTML = `<h4>US COVID-19 Data</h4>${contents}`;
 };
 
@@ -181,7 +150,7 @@ function draw_map(dataset, attr) {
 
     counts = {};
     // sum up the filtered data
-    
+    console.log(dataset);
     dataset_rollup = d3.nest()
         .key(function(d) {return d.state;})
         .rollup(function(d) {
@@ -193,7 +162,7 @@ function draw_map(dataset, attr) {
     for(var i = 0; i < dataset_rollup.length; i++) {
         counts[dataset_rollup[i].key] = dataset_rollup[i].value;
     }
-
+    console.log(counts);
     // load into states dict for geoJson
     for(var i = 0; i < states.features.length; i++) {
         state_name = states.features[i].properties['NAME'];
