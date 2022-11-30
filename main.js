@@ -21,10 +21,10 @@ function sliderSlidingListener(values) {
 }
 
 function updateDateRange(values) {
-    console.log(values);
+    // console.log(values);
     filter_min_date = structuredClone(date_format(date_interpolate_func(values[0])));
     filter_max_date = structuredClone(date_format(date_interpolate_func(values[1])));
-    console.log(filter_max_date, filter_min_date);
+    // console.log(filter_max_date, filter_min_date);
     update();
 }
 
@@ -116,7 +116,7 @@ function select_data_attr(btn, attr) {
 
 function show_map(show_attr) {
     attr = primary_view_attr_mapping[show_attr];
-    console.log(attr);
+    // console.log(attr);
     draw_map(filtered_dataset, attr);
 }
 /* primary view end */
@@ -202,7 +202,7 @@ function change_secondary_view() {
     } else {
         $('#secondary-div-y').hide();
     }
-    console.log(selected);
+    // console.log(selected);
     select_secondary_view = selected;
 
     change_secondary_axis();
@@ -226,7 +226,7 @@ function change_secondary_axis() {
 }
 
 function show_secondary_view() {
-    console.log(select_secondary_view, select_secondary_x_axis, select_secondary_y_axis);
+    // console.log(select_secondary_view, select_secondary_x_axis, select_secondary_y_axis);
     d3.select('#secondary_svg').selectAll('*').remove();
     if(select_secondary_view == 'connected scatter plot') {
         load_connected_scatter(filtered_dataset, select_secondary_x_axis, select_secondary_y_axis);

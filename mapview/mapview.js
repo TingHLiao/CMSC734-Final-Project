@@ -86,16 +86,7 @@ info.onAdd = function (map) {
 info.update = function (props) {
     
     if(props == undefined) return;
-    //console.log(show_attr);
-    //var [key, value] = props ? Object.entries(props.values) : [null, null];
-    //if(value  == null ) value=0;
-    //console.log(key);
-    //key = props['NAME'];
     value = props.values[show_attr];
-    //console.log(value);
-    //console.log(props.values);
-    ///if(props)
-    //console.log(props.NAME, props.values);
     const contents = props ? `<b>${props.NAME}</b><br />${value}` : 'Hover over a state';
     this._div.innerHTML = `<h4>US COVID-19 Data</h4>${contents}`;
 };
@@ -123,12 +114,10 @@ function dehover(state) {
 
 function show_state(e) {
     var name = e.target.feature.properties.NAME;
-    // console.log($('#select-state'))
     var sel = document.getElementById("select-state");
     for(var i = 0; i < sel.options.length; i++) {
         var opt = sel.options[i];
         if (opt.text == name){
-            console.log(opt.text)
             opt.selected = !opt.selected;
         }
     }
@@ -150,7 +139,7 @@ function draw_map(dataset, attr) {
 
     counts = {};
     // sum up the filtered data
-    console.log(dataset);
+    // console.log(dataset);
     dataset_rollup = d3.nest()
         .key(function(d) {return d.state;})
         .rollup(function(d) {
@@ -162,7 +151,7 @@ function draw_map(dataset, attr) {
     for(var i = 0; i < dataset_rollup.length; i++) {
         counts[dataset_rollup[i].key] = dataset_rollup[i].value;
     }
-    console.log(counts);
+    // console.log(counts);
     // load into states dict for geoJson
     for(var i = 0; i < states.features.length; i++) {
         state_name = states.features[i].properties['NAME'];

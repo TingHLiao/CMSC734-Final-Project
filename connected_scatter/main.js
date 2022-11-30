@@ -46,7 +46,7 @@ function ConnectedScatterplot(data, {
     const D = data.map(defined); //d3.map(data, defined);
   
     
-    console.log(...d3.extent(X));
+    // console.log(...d3.extent(X));
 
      // Compute default domains.
     if (xDomain === undefined) xDomain = d3.extent(X);//d3.nice(...d3.extent(X), width / 80);

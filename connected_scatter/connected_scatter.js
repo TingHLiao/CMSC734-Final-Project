@@ -32,13 +32,13 @@ var color;
 var keys;
 
 function load_connected_scatter(dataset, xaxis, yaxis) {
-  console.log(xaxis, yaxis);
+  // console.log(xaxis, yaxis);
   var X = [];
   var Y = [];
   var dataset_lines = [];
   keys = [];
-  console.log(dataset);
-  console.log(xaxis, yaxis);
+  // console.log(dataset);
+  // console.log(xaxis, yaxis);
   if(select_all_states) {
     dataset_rollup = d3.nest()
       .key(function(d) {return d.date.slice(0, 7);})
@@ -60,14 +60,14 @@ function load_connected_scatter(dataset, xaxis, yaxis) {
         return rollup_func(d, xaxis, yaxis);
       })
       .entries(dataset);
-    console.log(dataset_rollup);
+    // console.log(dataset_rollup);
     for(var i = 0; i < dataset_rollup.length; i++) {
       X = X.concat(d3.map(dataset_rollup[i].values, d=>d.value.x));
       Y = Y.concat(d3.map(dataset_rollup[i].values, d=>d.value.y));
       dataset_lines.push(dataset_rollup[i].values);
       keys.push(dataset_rollup[i].key);
     }
-    console.log(keys);
+    // console.log(keys);
   }
   //console.log(dataset_rollup); 
 
@@ -199,7 +199,7 @@ function add_line(
     O = O.slice(0, -1);
     I = d3.range(X.length);
   }
-  console.log(X, Y, T, O, I);
+  // console.log(X, Y, T, O, I);
 
   // Construct the line generator.
   if(X.length > 1) {
@@ -352,13 +352,13 @@ function make_plot(
 }
 
 function load_scatter(dataset, xaxis, yaxis) {
-  console.log(xaxis, yaxis);
+  // console.log(xaxis, yaxis);
   var X = [];
   var Y = [];
   var dataset_lines = [];
   keys = [];
-  console.log(dataset);
-  console.log(xaxis, yaxis);
+  // console.log(dataset);
+  // console.log(xaxis, yaxis);
   
   //console.log(dataset_rollup); 
 
@@ -370,15 +370,15 @@ function load_scatter(dataset, xaxis, yaxis) {
     
   X = d3.map(dataset, d=>d[xaxis]);
   Y = d3.map(dataset, d=>d[yaxis]);
-  console.log(X);
-  console.log(Y);
-  console.log(keys);
+  // console.log(X);
+  // console.log(Y);
+  // console.log(keys);
   make_plot(X=X, Y=Y, xLabel=xaxis, yLabel=yaxis);
 
   line_items = [];
-  console.log(X.length);
+  // console.log(X.length);
   for(var i = 0; i < X.length; i++) {
-    console.log(keys[i]);
+    // console.log(keys[i]);
     item = add_line(
       [X[i]], 
       [Y[i]], 

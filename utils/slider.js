@@ -45,7 +45,7 @@ $("#slider-single").slider({
 var is_animate = false;
 function animateSlider() {
 
-  console.log(is_animate);
+  // console.log(is_animate);
   if(is_animate == false) {
     is_animate = true;
     set_inactive(document.getElementById('btn-time'));
