@@ -66,6 +66,54 @@ function stateStyle(f) {
 var state_coords;
 var layer = null;
 
+const info = L.control();
+
+info.onAdd = function (map) {
+    this._div = L.DomUtil.create('div', 'info');
+    this.update();
+    return this._div;
+};
+
+info.update = function (props) {
+    // console.log(props)
+    var [key, value] = props ? Object.entries(props.values) : [null, null];
+    if(value  == null ) value=0;
+    const contents = props ? `<b>${props.NAME}</b><br />${key}: ${value}` : 'Hover over a state';
+    this._div.innerHTML = `<h4>US COVID-19 Data</h4>${contents}`;
+};
+
+info.addTo(myMap);
+
+function hover(state) {
+    var layer = state.target;
+
+    layer.setStyle({
+        weight: 2,
+        color: '#666',
+        dashArray: '',
+        fillOpacity: 0.7
+    });
+
+    layer.bringToFront();
+    info.update(layer.feature.properties);
+}
+
+function dehover(state) {
+    layer.resetStyle(state.target);
+    info.update();
+}
+
+function show_state(e) {
+    
+}
+
+function onEachFeature(feature, layer) {
+    layer.on({
+        mouseover: hover,
+        mouseout: dehover,
+        click: show_state
+    });
+}
 
 function draw_map(dataset, attr) {
     // copy the state_coords to states
@@ -93,11 +141,9 @@ function draw_map(dataset, attr) {
     }
     if(layer != null)
         myMap.removeLayer(layer);
-    layer = L.geoJson(states, {style: stateStyle}).addTo(myMap);
+    layer = L.geoJson(states, {style: stateStyle, onEachFeature: onEachFeature}).addTo(myMap);
 
 }
-
-
 
 
 
