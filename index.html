@@ -25,14 +25,11 @@
                 <div class="control-panel-1" id="control-panel-1">
                     <div class="slider-and-state-selector">
                         <div class="slider" id="slider">
-                            <div>
-                                <!-- <p>please select how </p> -->
-                                <input type="radio" name="radio-slider" id="radio-time" onclick="changeSliderMode('time'); show_secondary_view_options();" checked="checked" />
-                                <label>Time</label>
-                                <input type="radio" name="radio-slider" id="radio-period" onclick="changeSliderMode('period'); show_secondary_view_options();"/>
-                                <label>Period</label>
+                            <div class="btn-group">
+                                <button id='btn-period' onclick="changeSliderMode('period'); show_secondary_view_options();">Time period</button>
+                                <button id='btn-time' onclick="changeSliderMode('time'); show_secondary_view_options();">Certain time</button>
+                                <button id='btn-animation'>Animtation</button>
                             </div>
-                            
                             <div style="position: relative">
                                 <div id="slider-value1" class="slider-value"></div>
                                 <div id="slider-value2" class="slider-value"></div>
@@ -102,9 +99,7 @@
 
 
 
-
-                    <br/><br/>
-                    <div class="btn-group btn-group-sm" data-toggle="buttons">
+                    <!--<div class="btn-group btn-group-sm" data-toggle="buttons">
                         <label class="btn btn-secondary"  data-type="cleared">
                             <input type="checkbox" name="options" autocomplete="off">Cleared
                         </label>
@@ -117,6 +112,17 @@
                         <label class="btn btn-secondary"  data-type="vac_cnt">
                             <input type="checkbox" name="options" autocomplete="off">Vaccinations count
                         </label> 
+                    </div>-->
+                    <br/>
+                    <div class="btn-group">
+                        <button name="btn-attr" onclick="select_data_attr(this, 'conf_cases')">Comfirm cases</button>
+                        <button name="btn-attr" onclick="select_data_attr(this, 'conf_death')">Death</button>
+                        <button name="btn-attr" onclick="select_data_attr(this, 'inpatient')">COVID-used inpatient beds</button>
+                        <button name="btn-attr" onclick="select_data_attr(this, 'exc_death')">Excess death</button>
+                        <button name="btn-attr" onclick="select_data_attr(this, 'vac_cnt')">Vaccination counts</button>
+                    </div>
+                    <div>
+                        <a href="#" style='padding: 5px; padding-top: 10px;'>Show all data attributes in Parallel coordinate</a>
                     </div>
 
                 </div>
@@ -205,6 +211,6 @@
 <script src="stacked_bar_chart/bar_chart.js"></script>
 <script src="utils/slider.js"></script>
 <script src="utils/resize.js"></script>
-
+<script src="utils/button.js"></script>
 
 </html>
