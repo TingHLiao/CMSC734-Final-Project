@@ -28,14 +28,20 @@ function updateDateRange(values) {
 
 // initialize dataset and two views
 Promise.all([
-    d3.csv('dataset/merge.csv'),
+    d3.csv('dataset/merge_accum.csv'),
     d3.json('dataset/states.json'),
 ]).then(function (data) {
     dataset = data[0];
     state_coords = data[1];
 
+    
+
     // time format 
     var time_parse = d3.timeParse('%Y/%m/%d');
+    dataset.forEach(d => {
+        d.date = date_format(time_parse(d.date));
+    });
+
     filter_min_date = '2020/01/22'; //d3.min(dataset, function(d) {return d.date;});
     filter_max_date = d3.max(dataset, function(d) {return d.date;});
     date_interpolate_func = d3.interpolateDate(time_parse(filter_min_date), time_parse(filter_max_date));
