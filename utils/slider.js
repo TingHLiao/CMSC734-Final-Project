@@ -87,7 +87,13 @@ function changeSliderMode(mode) {
     $('#slider-single').show();
     $('#slider-range').hide();
     updateDateRange(single_value);
-  } else {
+  } else if (mode == 'period_par'){
+    slider_mode = 'period_par';
+    set_active(document.getElementById('btn-period'));
+    $('#slider-single').hide();
+    $('#slider-range').show();
+    updateDateRange(range_values);
+  } else{
     slider_mode = 'period';
     set_active(document.getElementById('btn-period'));
     $('#slider-single').hide();
@@ -98,7 +104,7 @@ function changeSliderMode(mode) {
 
   if(mode == 'animate') {
     animateSlider();
-  } else {
+  } else if (mode != 'period_par'){
     is_animate = false;
     document.getElementById('btn-animation').innerHTML = 'Play animation';
   }

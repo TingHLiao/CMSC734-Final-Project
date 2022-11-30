@@ -45,9 +45,8 @@ Promise.all([
     filter_min_date = '2020/01/22'; //d3.min(dataset, function(d) {return d.date;});
     filter_max_date = d3.max(dataset, function(d) {return d.date;});
     date_interpolate_func = d3.interpolateDate(time_parse(filter_min_date), time_parse(filter_max_date));
-    console.log($('#select-state'))
+
     $('#select-state').val('All');
-    // $('#select-state').options[0].selected = true;
     $('select[multiple]').multiselect('refresh');
     changeSliderMode("time");
     select_data_attr(document.getElementsByName('btn-attr')[0], 'conf_cases');
