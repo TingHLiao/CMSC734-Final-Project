@@ -28,14 +28,20 @@ function updateDateRange(values) {
 
 // initialize dataset and two views
 Promise.all([
-    d3.csv('dataset/merge.csv'),
+    d3.csv('dataset/merge_accum.csv'),
     d3.json('dataset/states.json'),
 ]).then(function (data) {
     dataset = data[0];
     state_coords = data[1];
 
+    
+
     // time format 
     var time_parse = d3.timeParse('%Y/%m/%d');
+    dataset.forEach(d => {
+        d.date = date_format(time_parse(d.date));
+    });
+
     filter_min_date = '2020/01/22'; //d3.min(dataset, function(d) {return d.date;});
     filter_max_date = d3.max(dataset, function(d) {return d.date;});
     date_interpolate_func = d3.interpolateDate(time_parse(filter_min_date), time_parse(filter_max_date));
@@ -44,6 +50,7 @@ Promise.all([
     // $('#select-state').options[0].selected = true;
     $('select[multiple]').multiselect('refresh');
     changeSliderMode("time");
+    select_data_attr(document.getElementsByName('btn-attr')[0], 'conf_cases');
     show_secondary_view_options();
     update();
 });
@@ -62,7 +69,9 @@ function update() {
         return date_bool && state_bool;
     });
     console.log(filtered_dataset);
-    select_data_attr(document.getElementsByName('btn-attr')[0], 'conf_cases');
+    
+    show_map(show_attr);
+    show_secondary_view();
 }
 
 /* primary view start */
@@ -75,16 +84,6 @@ var primary_view_attr_mapping = {
 };
 
 var show_attr = 'conf_cases';
-
-d3.selectAll('.btn-group > .btn.btn-secondary')
-    .on('click', function() {
-        show_attr = d3.select(this).attr('data-type');
-
-        d3.selectAll('.btn.btn-secondary.active').classed('active', false);
-
-        show_map(show_attr);
-        show_secondary_view();
-    });
 
 function select_data_attr(btn, attr) {
     show_attr = attr;
