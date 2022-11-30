@@ -126,13 +126,13 @@ function onEachFeature(feature, layer) {
     });
 }
 
-function draw_map(dataset, attr) {
+function draw_map(dataset, min_data, max_data, attr) {
     // copy the state_coords to states
     var states = structuredClone(state_coords);
 
     counts = {};
     // sum up the filtered data
-
+    /*
     dataset_rollup = d3.nest()
         .key(function(d) {return d.state;})
         .rollup(function(d) {
@@ -143,17 +143,34 @@ function draw_map(dataset, attr) {
     counts = {};
     for(var i = 0; i < dataset_rollup.length; i++) {
         counts[dataset_rollup[i].key] = dataset_rollup[i].value;
+    }*/
+    counts = {};
+    if(slider_mode == 'time') {
+        for(var i = 0; i < min_data.length; i++) {
+            counts[min_data[i].state] = +min_data[i][attr];
+        }
+    } else {
+
     }
+
     // load into states dict for geoJson
     for(var i = 0; i < states.features.length; i++) {
         state_name = states.features[i].properties['NAME'];
         states.features[i].properties.values = {}
         states.features[i].properties.values[show_attr] = counts[state_name];
     }
-    if(layer != null)
-        myMap.removeLayer(layer);
-    layer = L.geoJson(states, {style: stateStyle, onEachFeature: onEachFeature}).addTo(myMap);
-
+    if(layer != null) {
+        //myMap.removeLayer(layer);
+        layer.eachLayer(function(f) {
+            var state_name = f.feature.properties['NAME'];
+            f.feature.properties.values[show_attr] = counts[state_name]; 
+            f.setStyle(stateStyle(f.feature));
+        })
+    } else {
+        layer = L.geoJson(states, {style: stateStyle, onEachFeature: onEachFeature}).addTo(myMap);
+    }
+        
+    
 }
 
 

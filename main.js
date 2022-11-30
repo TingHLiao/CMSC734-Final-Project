@@ -4,6 +4,8 @@ var select_secondary_x_axis, select_secondary_y_axis;
 var dataset;
 var state_coords;
 var filtered_dataset;
+var min_data;
+var max_data;
 
 // time slider
 var filter_min_date;
@@ -33,8 +35,6 @@ Promise.all([
 ]).then(function (data) {
     dataset = data[0];
     state_coords = data[1];
-
-    
 
     // time format 
     var time_parse = d3.timeParse('%Y/%m/%d');
@@ -68,7 +68,26 @@ function update() {
         }
         return date_bool && state_bool;
     });
-    console.log(filtered_dataset);
+    
+    min_data = dataset.filter(function(d, i) {
+        var date_bool = d.date == filter_min_date;
+        var state_bool = true;
+        if(select_all_states == false) {
+            state_bool = select_certain_states.includes(d.state_abbrev);
+            //console.log(state_bool);
+        }
+        return date_bool && state_bool;
+    })
+
+    max_data = dataset.filter(function(d, i) {
+        var date_bool = d.date == filter_max_date;
+        var state_bool = true;
+        if(select_all_states == false) {
+            state_bool = select_certain_states.includes(d.state_abbrev);
+            //console.log(state_bool);
+        }
+        return date_bool && state_bool;
+    })
     
     show_map(show_attr);
     show_secondary_view();
@@ -98,7 +117,7 @@ function select_data_attr(btn, attr) {
 
 function show_map(show_attr) {
     attr = primary_view_attr_mapping[show_attr];
-    draw_map(filtered_dataset, attr);
+    draw_map(filtered_dataset, min_data, max_data, attr);
 }
 /* primary view end */
 
