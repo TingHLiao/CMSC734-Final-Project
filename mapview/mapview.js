@@ -19,49 +19,98 @@ var tiles = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z
 	ext: 'png'
 }).addTo(myMap);
 
+var choroScale_cases_time = d3.scaleThreshold()
+    .domain([10, 200, 2000, 5000, 10000, 20000, 50000, 90000, 150000, 300000])
+	.range(d3.schemeYlOrRd[9]);
 
-var choroScale = d3.scaleThreshold()
-	// .domain([1000, 20000, 50000, 100000000, 200000000, 500000000])
-    .domain([1000, 8000, 30000, 50000, 800000, 1000000])
-	.range(d3.schemeYlOrRd[8]);
-var choroScale_death = d3.scaleThreshold()
-    .domain([100, 1000, 30000, 50000, 500000, 800000])
+var choroScale_cases_period = d3.scaleThreshold()
+    .domain([500, 5000, 25000, 80000, 250000, 1000000, 2000000, 5000000, 8000000])
+	.range(d3.schemeYlOrRd[9]);
+
+var choroScale_death_time = d3.scaleThreshold()
+    .domain([1, 5, 10, 25, 50, 100, 200, 500, 800, 1200])
 	.range(d3.schemeBlues[9]);
-var choroScale_vac = d3.scaleThreshold()
-    .domain([0, 1, 80000, 5000000, 50000000, 100000000, 20000000, 50000000])
-	.range(d3.schemeBuGn[9]);
 
+var choroScale_death_period = d3.scaleThreshold()
+    .domain([100, 500, 2000, 8000, 20000, 40000, 60000, 80000, 100000])
+	.range(d3.schemeBlues[9]);
+
+var choroScale_vac_time = d3.scaleThreshold()
+    .domain([100, 1000, 5000, 20000, 40000, 80000, 160000, 350000, 500000])
+    .range(d3.schemeBuGn[9]);
+
+var choroScale_vac_period = d3.scaleThreshold()
+    .domain([1000, 10000, 50000, 200000, 500000, 2000000, 5000000, 10000000, 50000000])
+	.range(d3.schemeBuGn[9]);
 
 function stateStyle(f) {
     if (show_attr == 'conf_cases')
-        return {
-            fillColor: choroScale(f.properties.values[show_attr]),
-            weight: 2,
-            opacity: 1,
-            color: 'white',
-            dashArray: '3',
-            fillOpacity: 0.7
-        };
+        if (filter_min_date == filter_max_date) {
+            return {
+                fillColor: choroScale_cases_time(f.properties.values[show_attr]),
+                weight: 2,
+                opacity: 1,
+                color: 'white',
+                dashArray: '3',
+                fillOpacity: 0.7
+            };
+        }
+        else {
+            return {
+                fillColor: choroScale_cases_period(f.properties.values[show_attr]),
+                weight: 2,
+                opacity: 1,
+                color: 'white',
+                dashArray: '3',
+                fillOpacity: 0.7
+            };
+        }
     else if (show_attr == 'conf_death'){
-        return {
-            fillColor: choroScale_death(f.properties.values[show_attr]),
-            weight: 2,
-            opacity: 1,
-            color: 'white',
-            dashArray: '3',
-            fillOpacity: 0.7
-        };
+        if (filter_min_date == filter_max_date) {
+            return {
+                fillColor: choroScale_death_time(f.properties.values[show_attr]),
+                weight: 2,
+                opacity: 1,
+                color: 'white',
+                dashArray: '3',
+                fillOpacity: 0.7
+            };
+        }
+        else {
+            return {
+                fillColor: choroScale_death_period(f.properties.values[show_attr]),
+                weight: 2,
+                opacity: 1,
+                color: 'white',
+                dashArray: '3',
+                fillOpacity: 0.7
+            };
+        }
+        
     }
     else
-        return {
-            fillColor: choroScale_vac(f.properties.values[show_attr]),
-            weight: 2,
-            opacity: 1,
-            color: 'white',
-            dashArray: '3',
-            fillOpacity: 0.7
-        };
+        if (filter_min_date == filter_max_date) {
+            return {
+                fillColor: choroScale_vac_time(f.properties.values[show_attr]),
+                weight: 2,
+                opacity: 1,
+                color: 'white',
+                dashArray: '3',
+                fillOpacity: 0.7
+            }
+        }
+        else {
+            return {
+                fillColor: choroScale_vac_period(f.properties.values[show_attr]),
+                weight: 2,
+                opacity: 1,
+                color: 'white',
+                dashArray: '3',
+                fillOpacity: 0.7
+            }
+        }
 }
+
 
 var state_coords;
 var layer = null;
