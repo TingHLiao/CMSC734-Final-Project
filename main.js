@@ -187,7 +187,12 @@ function change_secondary_axis() {
 
     var selected_y = document.getElementById('secondary-select-y').value;
     selected_y = secondary_options[slider_mode][select_secondary_view]['y'][+selected_y];
-
+    
+    $('#sort-toggle').hide();
+    if (select_secondary_view == 'bar chart') {
+        $('#sort-toggle').show();
+    }
+    
     select_secondary_x_axis = selected_x;
     select_secondary_y_axis = selected_y;
     show_secondary_view();
