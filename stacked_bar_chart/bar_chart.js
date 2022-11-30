@@ -1,7 +1,9 @@
 var map_attr  = {
     'conf_cases': 'new_case',
     'conf_death': 'new_death',
-    'vac_cnt': 'daily_vaccinations'
+    'vac_cnt': 'daily_vaccinations',
+    'exc_death': 'total_Excess Estimate',
+    'inpatient': 'inpatient_beds_used_covid'
 };
 
 function load_bar_chart(dataset, filter_min_date, filter_max_date) {
