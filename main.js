@@ -112,7 +112,7 @@ secondary_options = {
             'y': ['k', 'l', 'm'],
         },
         'bar chart': {
-            'x': ['o', 'p', 'q'],
+            'x': [],
             'y': [],
         },
         'parallel coordinate': {
@@ -130,7 +130,7 @@ secondary_options = {
             'y': ['k', 'l', 'm'],
         },
         'bar chart': {
-            'x': ['o', 'p', 'q'],
+            'x': [],
             'y': [],
         },
         'parallel coordinate': {
