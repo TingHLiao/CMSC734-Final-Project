@@ -141,3 +141,9 @@ body {
     background-color: #3a86ff;
     color: white;
   }
+
+
+/* -------------- connected scatter plot ----------- */
+.show-when-hover {
+    opacity: 0%;
+}

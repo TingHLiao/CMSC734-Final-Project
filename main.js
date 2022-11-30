@@ -115,10 +115,6 @@ secondary_options = {
             'x': [],
             'y': [],
         },
-        'parallel coordinate': {
-            'x': [],
-            'y': [],
-        },
     },
     'period': {
         'connected scatter plot': {
@@ -132,10 +128,6 @@ secondary_options = {
         'bar chart': {
             'x': [],
             'y': [],
-        },
-        'parallel coordinate': {
-            'x': [],
-            'y': [],   
         },
     }
 }
