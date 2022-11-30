@@ -78,7 +78,7 @@ info.update = function (props) {
     // console.log(props)
     var [key, value] = props ? Object.entries(props.values) : [null, null];
     if(value  == null ) value=0;
-    const contents = props ? `<b>${props.NAME}</b><br />${key}: ${value}` : 'Hover over a state';
+    const contents = props ? `<b>${props.NAME}</b><br />${key[1]}` : 'Hover over a state';
     this._div.innerHTML = `<h4>US COVID-19 Data</h4>${contents}`;
 };
 
@@ -104,7 +104,18 @@ function dehover(state) {
 }
 
 function show_state(e) {
-    
+    var name = e.target.feature.properties.NAME;
+    // console.log($('#select-state'))
+    var sel = document.getElementById("select-state");
+    for(var i = 0; i < sel.options.length; i++) {
+        var opt = sel.options[i];
+        if (opt.text == name){
+            console.log(opt.text)
+            opt.selected = !opt.selected;
+        }
+    }
+
+    changeStates(sel);
 }
 
 function onEachFeature(feature, layer) {
