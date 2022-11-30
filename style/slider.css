@@ -4,14 +4,14 @@
     background-color: rgb(123, 123, 123);
     position: absolute; 
     left: 0; 
-    top: 0;
+    top: 25px;
 }
 
 #slider-range .ui-slider-handle {
     outline: 0;
     background: rgb(25, 20, 100);
     border-radius: 50%;
-  }
+}
 
 #slider-single .ui-slider-handle {
     outline: 0;
@@ -19,8 +19,16 @@
     border-radius: 50%;
 }
 
-.slider-value {
+#slider-value1 {
     position: absolute;
-    top: 20px;
+    top: 5px;
+    width: 72px;
+    /* background-color: rgb(183, 180, 220); */
+}
+
+#slider-value2 {
+    position: absolute;
+    top: 36px;
+    width: 72px;
     /* background-color: rgb(183, 180, 220); */
 }

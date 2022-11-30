@@ -62,15 +62,16 @@ function update() {
         return date_bool && state_bool;
     });
     console.log(filtered_dataset);
-    show_map(show_attr);
-    show_secondary_view();
+    select_data_attr(document.getElementsByName('btn-attr')[0], 'conf_cases');
 }
 
 /* primary view start */
 var primary_view_attr_mapping = {
     'conf_cases': 'new_case',
     'conf_death': 'new_death',
-    'vac_cnt': 'daily_vaccinations'
+    'vac_cnt': 'daily_vaccinations',
+    'exc_death': '',
+    'inpatient': '',
 };
 
 var show_attr = 'conf_cases';
@@ -84,6 +85,18 @@ d3.selectAll('.btn-group > .btn.btn-secondary')
         show_map(show_attr);
         show_secondary_view();
     });
+
+function select_data_attr(btn, attr) {
+    show_attr = attr;
+    var btns = document.getElementsByName('btn-attr');
+    for(var i = 0; i < btns.length; i++) {
+        set_inactive(btns[i]);
+    }
+    set_active(btn);
+    show_map(show_attr);
+    show_secondary_view();
+}
+
 function show_map(show_attr) {
     attr = primary_view_attr_mapping[show_attr];
     draw_map(filtered_dataset, attr);
@@ -99,7 +112,7 @@ secondary_options = {
             'y': ['k', 'l', 'm'],
         },
         'bar chart': {
-            'x': ['o', 'p', 'q'],
+            'x': [],
             'y': [],
         },
         'parallel coordinate': {
@@ -117,7 +130,7 @@ secondary_options = {
             'y': ['k', 'l', 'm'],
         },
         'bar chart': {
-            'x': ['o', 'p', 'q'],
+            'x': [],
             'y': [],
         },
         'parallel coordinate': {
@@ -191,7 +204,12 @@ function change_secondary_axis() {
 
     var selected_y = document.getElementById('secondary-select-y').value;
     selected_y = secondary_options[slider_mode][select_secondary_view]['y'][+selected_y];
-
+    
+    $('#sort-toggle').hide();
+    if (select_secondary_view == 'bar chart') {
+        $('#sort-toggle').show();
+    }
+    
     select_secondary_x_axis = selected_x;
     select_secondary_y_axis = selected_y;
     show_secondary_view();

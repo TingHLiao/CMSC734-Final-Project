@@ -1,10 +1,13 @@
-
 var map_attr  = {
     'conf_cases': 'new_case',
     'conf_death': 'new_death',
     'vac_cnt': 'daily_vaccinations'
 };
-
+var map_attr_2  = {
+    'conf_cases': 'tot_cases',
+    'conf_death': 'tot_death',
+    'vac_cnt': 'daily_vaccinations'
+};
 
 function load_bar_chart(dataset, filter_min_date, filter_max_date) {
     var is_time = filter_max_date == filter_min_date; // time or period
@@ -12,10 +15,9 @@ function load_bar_chart(dataset, filter_min_date, filter_max_date) {
         load_bar_chart_time(dataset);
     }
     else {
-        load_bar_chart_period(dataset, filter_min_date, filter_max_date);
+        load_bar_chart_period(dataset);
     }
 }
-
 
 function load_bar_chart_time(dataset) {
     var attr = map_attr[show_attr];
@@ -141,27 +143,16 @@ function load_bar_chart_time(dataset) {
             .attr("font-size", "10px")
             .text(d => d[attr]);
     }
-    //-----------------------------------------------------------------------------
-    var select = d3.select("#date")
-        .on("change", function() {
-            updateChart(this.value, 500)
-        });
-
     // var checkbox = d3.select("#sort")
     //     .on("click", function() {
     //         updateChart(dates[date_slider.value], 500)
     //         // updateChart(select.property("value"), 500)
     //     });
-
-    // date_slider.oninput = function() {
-    //     date_slider_output.innerHTML = dates[date_slider.value];
-    //     updateChart(dates[date_slider.value], 50);
-    // }
 };
 
 
 function load_bar_chart_period(dataset) {
-    var attr = map_attr[show_attr];
+    var attr = map_attr_2[show_attr];
     var time_parse = d3.timeParse('%Y/%m/%d');
     var dates = [];
     var states = [];
@@ -211,21 +202,20 @@ function load_bar_chart_period(dataset) {
 		.attr("transform", `translate(${margin.left},0)`)
 		.attr("class", "y-axis")
 
-    updateChart(filter_min_date, 0)
+    updateChart(filter_min_date, filter_max_date, 0)
 
 
     //-----------------------------------------------------------------------------
-    function updateChart(input, speed) {
+    function updateChart(input, input2, speed) {
 
-        var filtered_data = data.filter(function(d) { if( d.date == input) { return d; } });
+        var filtered_data = data.filter(function(d) { if( d.date == input || d.date == input2) { return d; } });
+        // console.log("filtered_data:  "+filtered_data.map(d => d.state))
 
-
-        // filtered_data.forEach(function(d) {
-        //     if (d.new_case == NaN) {d.new_case = 0;}
-        //     if (d.new_death == NaN) {d.new_death = 0;}
-        //     d.new_diff = d.new_case - d.new_death
-        //     return d
-        // })
+        filtered_data.forEach(function(d) {
+            if (d[attr] == '') {d[attr] = 0;}
+            d.diff = d.new_case - d.new_death
+            return d
+        })
 
         // filtered_data.sort(d3.select("#sort").property("checked")
         //     ? (a, b) => b.tot_cases - a.tot_cases
@@ -284,20 +274,10 @@ function load_bar_chart_period(dataset) {
             .attr("font-size", "10px")
             .text(d => d[attr]);
     }
-    //-----------------------------------------------------------------------------
-    var select = d3.select("#date")
-        .on("change", function() {
-            updateChart(this.value, 500)
-        });
 
     // var checkbox = d3.select("#sort")
     //     .on("click", function() {
     //         updateChart(dates[date_slider.value], 500)
     //         // updateChart(select.property("value"), 500)
     //     });
-
-    // date_slider.oninput = function() {
-    //     date_slider_output.innerHTML = dates[date_slider.value];
-    //     updateChart(dates[date_slider.value], 50);
-    // }
 };

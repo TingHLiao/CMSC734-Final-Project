@@ -44,17 +44,25 @@ $('#slider-range').hide();
 
 function changeSliderMode(mode) {
   slider_mode = mode;
+
+  set_inactive(document.getElementById('btn-time'));
+  set_inactive(document.getElementById('btn-period'));
+  set_inactive(document.getElementById('btn-animation'));
+
   if(mode == 'time') {
+    set_active(document.getElementById('btn-time'));
     $('#slider-single').show();
     $('#slider-range').hide();
     updateDateRange(single_value);
   } else {
+    set_active(document.getElementById('btn-period'));
     $('#slider-single').hide();
     $('#slider-range').show();
     updateDateRange(range_values);
   }
   update_slider_tag();
   
+
 }
 
 function update_slider_tag() {
@@ -65,7 +73,7 @@ function update_slider_tag() {
   } else {
     $("#slider-value2").show();
     $("#slider-value1").css('left', "" + 100*range_values[0] + "%");
-    $("#slider-value2").css('left', "" + 100*range_values[1] + "%");
+    $("#slider-value2").css('right', "" + (100 - 100*range_values[1]) + "%");
     dates = sliderSlidingListener(range_values);
     $("#slider-value1").text(dates[0]);
     $("#slider-value2").text(dates[1]);
