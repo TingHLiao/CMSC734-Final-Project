@@ -26,12 +26,16 @@ function rollup_func(d, xaxis, yaxis) {
     y: y_func,
   };
 }
+var line_items = [];
+var color;
+var keys;
 
 function load_connected_scatter(dataset, xaxis, yaxis) {
   console.log(xaxis, yaxis);
   var X = [];
   var Y = [];
   var dataset_lines = [];
+  keys = [];
   if(select_all_states) {
     dataset_rollup = d3.nest()
       .key(function(d) {return d.date.slice(0, 7);})
@@ -44,6 +48,7 @@ function load_connected_scatter(dataset, xaxis, yaxis) {
     Y = d3.map(dataset_rollup, d=>d.value.y);
     
     dataset_lines = [dataset_rollup];
+    keys.push('All states');
   } else {
     dataset_rollup = d3.nest()
       .key(function(d) {return d.state_abbrev})
@@ -57,25 +62,62 @@ function load_connected_scatter(dataset, xaxis, yaxis) {
       X = X.concat(d3.map(dataset_rollup[i].values, d=>d.value.x));
       Y = Y.concat(d3.map(dataset_rollup[i].values, d=>d.value.y));
       dataset_lines.push(dataset_rollup[i].values);
+      keys.push(dataset_rollup[i].key);
     }
-
+    console.log(keys);
   }
   //console.log(dataset_rollup); 
 
-  make_plot(X=X, Y=Y);
+  color = d3.scaleOrdinal()
+      .domain(keys)
+      .range(d3.schemeSet2);
+
+  make_plot(X=X, Y=Y, xLabel=xaxis, yLabel=yaxis);
+
+  line_items = [];
   for(var i = 0; i < dataset_lines.length; i++) {
     var x = d3.map(dataset_lines[i], d=>d.value.x);
     var y = d3.map(dataset_lines[i], d=>d.value.y);
-    items = add_line(
+    var key = keys[i];
+    item = add_line(
       X=x, 
       Y=y, 
       T=d3.map(dataset_lines[i], d=>d.key),
-      O=d3.map(dataset_lines[i], d=>'top'))
+      O=d3.map(dataset_lines[i], d=>'top'),
+      stroke=color(key))
+    //animate(item[0], item[1], item[2], item[3]);
+    line_items.push(item);
   }
   
-  
+  add_legend(keys, color);
   //console.log(items);
   //animate(items[0], items[1], items[2], items[3]);
+}
+
+
+function add_legend(keys, color) {
+  var svg = d3.select("#secondary_svg")
+  const x_offset = 550;
+  const y_offset = 50;
+  svg.selectAll("mydots")
+    .data(keys)
+    .enter()
+    .append("circle")
+    .attr("cx", x_offset)
+    .attr("cy", function(d,i){ return y_offset + i*25}) // 100 is where the first dot appears. 25 is the distance between dots
+    .attr("r", 7)
+    .style("fill", function(d){ return color(d)})
+
+  svg.selectAll("mylabels")
+  .data(keys)
+  .enter()
+  .append("text")
+  .attr("x", x_offset + 20)
+  .attr("y", function(d,i){ return y_offset + i*25}) // 100 is where the first dot appears. 25 is the distance between dots
+  .style("fill", function(d){ return color(d)})
+  .text(function(d){ return d})
+  .attr("text-anchor", "left")
+  .style("alignment-baseline", "middle")
 }
 
 var xScale;
@@ -85,7 +127,7 @@ function length(path) {
   return d3.create("svg:path").attr("d", path).node().getTotalLength();
 }
 
-function animate(line, path, label, I, duration=5000) {
+function animate(line, path, label, I, duration=10000) {
   if (duration > 0) {
     const l = length(line(I));
 
@@ -100,10 +142,30 @@ function animate(line, path, label, I, duration=5000) {
     label
         .interrupt()
         .attr("opacity", 0)
-      .transition()
+        .transition()
         .delay(i => length(line(I.filter(j => j <= i))) / l * (duration - 125))
-        .attr("opacity", 1);
-  }    
+        .attr("opacity", 1)
+        .transition()
+        .delay(i => length(line(I.filter(j => j <= i))) / l * (duration + 125))
+        .attr("opacity", 0);
+  }
+}
+
+function show_all_pairs(i) {
+  
+  for(var j = 0; j < line_items.length; j++) {
+    d3.select(line_items[j][2]._groups[0][i]).style('opacity', "100%");
+    d3.select(line_items[j][4]._groups[0][i]).attr('r', 6);
+    d3.select(line_items[j][4]._groups[0][i]).attr('fill', color(keys[j]));
+  }
+}
+
+function hide_all_pairs(i) {
+  for(var j = 0; j < line_items.length; j++) {
+    d3.select(line_items[j][2]._groups[0][i]).style('opacity', "0%");
+    d3.select(line_items[j][4]._groups[0][i]).attr('r', 3);
+    d3.select(line_items[j][4]._groups[0][i]).attr('fill', '#fff');
+  }
 }
 
 function add_line(
@@ -111,17 +173,15 @@ function add_line(
   Y = [],
   T = [],
   O = [],
+  stroke = "currentColor", // stroke color of line and dots
   r = 3, // (fixed) radius of dots, in pixels
   curve = d3.curveCatmullRom, // curve generator for the line
   fill = "white", // fill color of dots
-  stroke = "currentColor", // stroke color of line and dots
   strokeWidth = 2, // stroke width of line and dots
   strokeLinecap = "round", // stroke line cap of line
   strokeLinejoin = "round", // stroke line join of line
   halo = "#fff", // halo color for the labels
   haloWidth = 6, // halo width for the labels
-  duration = 0, // intro animation in milliseconds (0 to disable)
-  run_animate = false,
 ) {
   var I = d3.range(X.length);
 
@@ -141,24 +201,31 @@ function add_line(
       .attr("stroke-linecap", strokeLinecap)
       .attr("d", line(I));
   
-    svg.append("g")
+  var circles = svg.append("g")
       .attr("fill", fill)
       .attr("stroke", stroke)
       .attr("stroke-width", strokeWidth)
-    .selectAll("circle")
-    .data(I)
-    .join("circle")
+      .selectAll("circle")
+      .data(I)
+      .join("circle")
       .attr("cx", i => xScale(X[i]))
       .attr("cy", i => yScale(Y[i]))
-      .attr("r", r);
+      .attr("r", r)
+      .on('mouseover', function(d, i) {
+        show_all_pairs(i);
+      })
+      .on('mouseout', function(d, i) {
+        hide_all_pairs(i);
+      });
 
   var label = svg.append("g")
       .attr("font-family", "sans-serif")
       .attr("font-size", 10)
       .attr("stroke-linejoin", "round")
-    .selectAll("g")
-    .data(I)
-    .join("g")
+      .selectAll("g")
+      .data(I)
+      .join("g")
+      .classed('show-when-hover', true)
       .attr("transform", i => `translate(${xScale(X[i])},${yScale(Y[i])})`);
 
   if (T) label.append("text")
@@ -171,18 +238,21 @@ function add_line(
           case "right": t.attr("dx", "0.5em").attr("dy", "0.32em").attr("text-anchor", "start"); break;
           default: t.attr("text-anchor", "middle").attr("dy", "-0.7em"); break;
         }
+        t.attr('fill', stroke);
       })
       .call(text => text.clone(true))
-      .attr("fill", "none")
+      .attr("fill", stroke)
       .attr("stroke", halo)
       .attr("stroke-width", haloWidth);
 
-  return [line, path, label, I];
+  return [line, path, label, I, circles];
 }
 
 function make_plot(
   X = [], // given d in data, returns the (quantitative) x-value
   Y = [], // given d in data, returns the (quantitative) y-value
+  xLabel, // a label for the x-axis
+  yLabel, // a label for the y-axis
   r = 3,
   width = 660, // outer width, in pixels
   height = 640, // outer height, in pixels
@@ -199,12 +269,10 @@ function make_plot(
   xDomain, // [xmin, xmax]
   xRange = [marginLeft + insetLeft, width - marginRight - insetRight], // [left, right]
   xFormat = d3.format(".2s"), // a format specifier string for the x-axis
-  xLabel, // a label for the x-axis
   yType = d3.scaleLinear, // type of y-scale
   yDomain, // [ymin, ymax]
   yRange = [height - marginBottom - insetBottom, marginTop + insetTop], // [bottom, top]
   yFormat = d3.format(".2s"), // a format specifier string for the y-axis
-  yLabel, // a label for the y-axis
   ) {
 
    // Compute default domains.
@@ -237,6 +305,7 @@ function make_plot(
           .attr("y", marginBottom - 4)
           .attr("fill", "currentColor")
           .attr("text-anchor", "end")
+          .attr('font-size', 14)
           .text(xLabel));
 
   svg.append("g")
@@ -248,8 +317,11 @@ function make_plot(
           .attr("stroke-opacity", 0.1))
       .call(g => g.append("text")
           .attr("x", -marginLeft)
-          .attr("y", 10)
+          .attr("y", 30)
           .attr("fill", "currentColor")
           .attr("text-anchor", "start")
-          .text(yLabel));
+          .attr('font-size', 14)
+          .text(yLabel))
+
 }
+

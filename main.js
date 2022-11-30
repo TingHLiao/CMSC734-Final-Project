@@ -29,7 +29,7 @@ function updateDateRange(values) {
 // initialize dataset and two views
 Promise.all([
     d3.csv('dataset/merge.csv'),
-    d3.json('../dataset/states.json'),
+    d3.json('dataset/states.json'),
 ]).then(function (data) {
     dataset = data[0];
     state_coords = data[1];
@@ -115,10 +115,6 @@ secondary_options = {
             'x': [],
             'y': [],
         },
-        'parallel coordinate': {
-            'x': [],
-            'y': [],
-        },
     },
     'period': {
         'connected scatter plot': {
@@ -132,10 +128,6 @@ secondary_options = {
         'bar chart': {
             'x': [],
             'y': [],
-        },
-        'parallel coordinate': {
-            'x': [],
-            'y': [],   
         },
     }
 }
