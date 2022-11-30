@@ -1,4 +1,4 @@
-var single_value = 0.5;
+var single_value = 0.2;
 var range_values = [0, 1];
 $("#slider-range").slider({
   range: true,
@@ -29,8 +29,12 @@ $("#slider-single").slider({
   step: 0.001,
 
   slide: function (event, ui) {
+    if(is_animate) {
+      changeSliderMode('time');
+    }
     single_value = ui.value;
     update_slider_tag(single_value);
+
   },
 
   stop: function(event, ui) {
@@ -38,30 +42,66 @@ $("#slider-single").slider({
   }
 });
 
+var is_animate = false;
+function animateSlider() {
+
+  console.log(is_animate);
+  if(is_animate == false) {
+    is_animate = true;
+    set_inactive(document.getElementById('btn-time'));
+    set_active(document.getElementById('btn-animation'));
+    animateCallback();
+    document.getElementById('btn-animation').innerHTML = 'Pause animation';
+  } else {
+    is_animate = false;
+    set_active(document.getElementById('btn-time'));
+    set_inactive(document.getElementById('btn-animation'));
+    document.getElementById('btn-animation').innerHTML = 'Play animation';
+  }
+}
+function animateCallback() {
+  single_value = single_value + 0.001;
+  $('#slider-single').slider('option', 'value', single_value);
+  update_slider_tag(single_value);
+
+  if(single_value > 1)
+    single_value = 0;
+  
+  if(is_animate)
+    setTimeout(animateCallback, 100);
+}
 
 var slider_mode = 'time';
 $('#slider-range').hide();
 
 function changeSliderMode(mode) {
-  slider_mode = mode;
+
 
   set_inactive(document.getElementById('btn-time'));
   set_inactive(document.getElementById('btn-period'));
   set_inactive(document.getElementById('btn-animation'));
 
-  if(mode == 'time') {
+  if(mode == 'time' || mode == 'animate') {
+    slider_mode = 'time';
     set_active(document.getElementById('btn-time'));
     $('#slider-single').show();
     $('#slider-range').hide();
     updateDateRange(single_value);
   } else {
+    slider_mode = 'period';
     set_active(document.getElementById('btn-period'));
     $('#slider-single').hide();
     $('#slider-range').show();
     updateDateRange(range_values);
   }
   update_slider_tag();
-  
+
+  if(mode == 'animate') {
+    animateSlider();
+  } else {
+    is_animate = false;
+    document.getElementById('btn-animation').innerHTML = 'Play animation';
+  }
 
 }
 
