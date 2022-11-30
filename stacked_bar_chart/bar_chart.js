@@ -86,9 +86,9 @@ function load_bar_chart_time(dataset) {
         //     return d
         // })
 
-        // filtered_data.sort(d3.select("#sort").property("checked")
-        //     ? (a, b) => b.tot_cases - a.tot_cases
-        //     : (a, b) => states.indexOf(a.state) - states.indexOf(b.state))
+        filtered_data.sort(d3.select("#sort").property("checked")
+            ? (a, b) => b[attr] - a[attr]
+            : (a, b) => states.indexOf(a.state) - states.indexOf(b.state))
 
         //Axis
         x.domain(filtered_data.map(d => d.state));
@@ -115,11 +115,11 @@ function load_bar_chart_time(dataset) {
 
         bars.exit().remove();
     
-        var new_bars = bars.enter().append("rect")
+        bars.enter().append("rect")
             .attr("width", x.bandwidth())
             .attr("fill", map_color[show_attr])
 
-        new_bars.merge(bars)
+        .merge(bars)
             .transition().duration(speed)
             .attr("width", x.bandwidth())
                 .attr("x", d => x(d.state))
@@ -138,16 +138,16 @@ function load_bar_chart_time(dataset) {
             .merge(text)
         .transition().duration(speed)
             .attr("transform", function(d){
-                return `translate(${x(d.state) + x.bandwidth() / 2 +1},${y(d[attr]) - 5}) rotate(-90)` 
+                return `translate(${x(d.state) + x.bandwidth() / 2 +3},${y(d[attr]) - 5}) rotate(-90)` 
             })
             .attr("font-size", "10px")
             .text(d => d[attr]);
     }
-    // var checkbox = d3.select("#sort")
-    //     .on("click", function() {
-    //         updateChart(dates[date_slider.value], 500)
-    //         // updateChart(select.property("value"), 500)
-    //     });
+    var checkbox = d3.select("#sort")
+        .on("click", function() {
+            updateChart(filter_min_date, 500)
+            // updateChart(select.property("value"), 500)
+        });
 };
 
 
@@ -269,7 +269,7 @@ function load_bar_chart_period(dataset) {
             .merge(text)
         .transition().duration(speed)
             .attr("transform", function(d){
-                return `translate(${x(d.state) + x.bandwidth() / 2 +1},${y(d[attr]) - 5}) rotate(-90)` 
+                return `translate(${x(d.state) + x.bandwidth() / 2 + 3},${y(d[attr]) - 5}) rotate(-90)` 
             })
             .attr("font-size", "10px")
             .text(d => d[attr]);
