@@ -139,10 +139,6 @@ secondary_options = {
             'x': ['new_case', 'new_death', 'daily_vaccinations', 'inpatient_beds_used_covid', 'total_Excess Estimate'],
             'y': ['new_death', 'new_case', 'daily_vaccinations', 'inpatient_beds_used_covid', 'total_Excess Estimate'],
         },
-        'scatter plot': {
-            'x': ['h', 'i', 'j'],
-            'y': ['k', 'l', 'm'],
-        },
         'bar chart': {
             'x': [],
             'y': [],
@@ -233,7 +229,7 @@ function show_secondary_view() {
     }
     else if (select_secondary_view == 'bar chart') {
         load_bar_chart(filtered_dataset, filter_min_date, filter_max_date);
-    } else if (select_secondary_view == 'scatter plot') {
+    } else if (slider_mode == 'time' && select_secondary_view == 'scatter plot') {
         load_scatter(filtered_dataset, select_secondary_x_axis, select_secondary_y_axis);
     }
 }
