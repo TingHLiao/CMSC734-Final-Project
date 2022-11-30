@@ -117,7 +117,7 @@ function select_data_attr(btn, attr) {
 
 function show_map(show_attr) {
     attr = primary_view_attr_mapping[show_attr];
-    draw_map(filtered_dataset, min_data, max_data, attr);
+    draw_map(filtered_dataset, attr);
 }
 /* primary view end */
 

@@ -126,13 +126,13 @@ function onEachFeature(feature, layer) {
     });
 }
 
-function draw_map(dataset, min_data, max_data, attr) {
+function draw_map(dataset, attr) {
     // copy the state_coords to states
     var states = structuredClone(state_coords);
 
     counts = {};
     // sum up the filtered data
-    /*
+    
     dataset_rollup = d3.nest()
         .key(function(d) {return d.state;})
         .rollup(function(d) {
@@ -143,14 +143,6 @@ function draw_map(dataset, min_data, max_data, attr) {
     counts = {};
     for(var i = 0; i < dataset_rollup.length; i++) {
         counts[dataset_rollup[i].key] = dataset_rollup[i].value;
-    }*/
-    counts = {};
-    if(slider_mode == 'time') {
-        for(var i = 0; i < min_data.length; i++) {
-            counts[min_data[i].state] = +min_data[i][attr];
-        }
-    } else {
-
     }
 
     // load into states dict for geoJson
