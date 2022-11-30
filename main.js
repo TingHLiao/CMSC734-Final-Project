@@ -44,6 +44,7 @@ Promise.all([
     // $('#select-state').options[0].selected = true;
     $('select[multiple]').multiselect('refresh');
     changeSliderMode("time");
+    select_data_attr(document.getElementsByName('btn-attr')[0], 'conf_cases');
     show_secondary_view_options();
     update();
 });
@@ -62,7 +63,9 @@ function update() {
         return date_bool && state_bool;
     });
     console.log(filtered_dataset);
-    select_data_attr(document.getElementsByName('btn-attr')[0], 'conf_cases');
+    
+    show_map(show_attr);
+    show_secondary_view();
 }
 
 /* primary view start */
