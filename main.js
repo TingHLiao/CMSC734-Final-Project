@@ -79,16 +79,6 @@ var primary_view_attr_mapping = {
 
 var show_attr = 'conf_cases';
 
-d3.selectAll('.btn-group > .btn.btn-secondary')
-    .on('click', function() {
-        show_attr = d3.select(this).attr('data-type');
-
-        d3.selectAll('.btn.btn-secondary.active').classed('active', false);
-
-        show_map(show_attr);
-        show_secondary_view();
-    });
-
 function select_data_attr(btn, attr) {
     show_attr = attr;
     var btns = document.getElementsByName('btn-attr');
