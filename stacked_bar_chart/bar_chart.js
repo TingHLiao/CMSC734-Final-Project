@@ -77,7 +77,6 @@ function load_bar_chart_time(dataset) {
     function updateChart(input, speed) {
 
         var filtered_data = data.filter(function(d) { if( d.date == input) { return d; } });
-
         
         // filtered_data.forEach(function(d) {
         //     if (d.new_case == NaN) {d.new_case = 0;}
@@ -154,7 +153,7 @@ function load_bar_chart_time(dataset) {
 
 
 function load_bar_chart_period(dataset) {
-    var attr = map_attr_2[show_attr];
+    var attr = map_attr[show_attr];
     var time_parse = d3.timeParse('%Y/%m/%d');
     var dates = [];
     var states = [];
@@ -175,8 +174,7 @@ function load_bar_chart_period(dataset) {
 	.enter().append("option")
 		.text(d => d)
     
-    max_new_cases = d3.max(data, function(d){return +d[attr];});
-    min_new_cases = d3.min(data, function(d){return +d[attr];});
+
 
     svg = d3.select("#secondary_svg"),
     margin = {top: 65, left: 35, bottom: 10, right: 10};
@@ -204,26 +202,39 @@ function load_bar_chart_period(dataset) {
 		.attr("transform", `translate(${margin.left},0)`)
 		.attr("class", "y-axis")
 
-    updateChart(filter_min_date, filter_max_date, 0)
+    updateChart(filter_min_date, 0)
 
 
     //-----------------------------------------------------------------------------
-    function updateChart(input, input2, speed) {
+    function updateChart(input, speed) {
 
-        var filtered_data = data.filter(function(d) { if( d.date == input || d.date == input2) { return d; } });
-        // console.log("filtered_data:  "+filtered_data.map(d => d.state))
+        var filtered_data = data.filter(function(d) { if( d.date == input) { return d; } });
+        
 
-        filtered_data.forEach(function(d) {
-            if (d[attr] == '') {d[attr] = 0;}
-            d.diff = d.new_case - d.new_death
-            return d
-        })
+        dataset_rollup = d3.nest()
+            .key(function (d) { return d.state; })
+            .rollup(function (d) {
+                return d3.sum(d, function (e) { return +e[attr]; })
+            })
+            .entries(dataset);
 
-        // filtered_data.sort(d3.select("#sort").property("checked")
-        //     ? (a, b) => b.tot_cases - a.tot_cases
-        //     : (a, b) => states.indexOf(a.state) - states.indexOf(b.state))
+        state_summed_up_value_pair = {};
+        for(var i = 0; i < dataset_rollup.length; i++) {
+            state_summed_up_value_pair[dataset_rollup[i].key] = dataset_rollup[i].value;
+        }
+        
+        max_new_cases = d3.max(Object.values(state_summed_up_value_pair));
+        min_new_cases = d3.min(Object.values(state_summed_up_value_pair));
+        console.log("1111111 " + max_new_cases)
+        console.log("2222222 " + min_new_cases)
 
-        //Axis
+        // --------------------- Sort ---------------------
+        filtered_data.sort(d3.select("#sort").property("checked")
+            ? (a, b) => state_summed_up_value_pair[b.state] - state_summed_up_value_pair[a.state]
+            : (a, b) => states.indexOf(a.state) - states.indexOf(b.state))
+        // --------------------- Sort ---------------------
+
+        // --------------------- Axis ---------------------
         x.domain(filtered_data.map(d => d.state));
         y.domain([0,max_new_cases]);
         color_scale.domain([min_new_cases, max_new_cases]);
@@ -241,45 +252,48 @@ function load_bar_chart_period(dataset) {
             .transition()
             .duration(speed)
             .call(d3.axisLeft(y).ticks(null, "s"));
-        //Axis---------------------------------------------------------
+        // --------------------- Axis ---------------------
 
-        var bars = svg.selectAll("rect")
+        // --------------------- bars ---------------------
+        var bars = svg.selectAll(".bar-chart-rect")
             .data(filtered_data);
 
         bars.exit().remove();
-    
-        var new_bars = bars.enter().append("rect")
+
+        var barsEnter = bars.enter()
+            .append("g")
+            .attr("class", "bar-chart-rect")
+
+        barsEnter.append('rect')
+            .attr("class", "bar-label-group-bar")
             .attr("width", x.bandwidth())
+            .attr("x", d => x(d.state))
             .attr("fill", map_color[show_attr])
+        
+            barsEnter.append('text')
+                .attr("class","bar-label-group-label")
 
-        new_bars.merge(bars)
-            .transition().duration(speed)
-            .attr("width", x.bandwidth())
-                .attr("x", d => x(d.state))
-                .attr("y", d => y(d[attr]))
-                .attr("height", d => height - margin.bottom - y(d[attr]))
-                .attr("opacity", d => `${color_scale(d[attr])}%`)
-
-        var text = svg.selectAll(".text-number")
-            .data(filtered_data, d => d.state);
-
-        text.exit().remove()
-
-        text.enter().append("text")
-            .attr("class", "text-number")
-            // .attr("text-anchor", "left")
-            .merge(text)
+        bars = bars.merge(barsEnter)
         .transition().duration(speed)
-            .attr("transform", function(d){
-                return `translate(${x(d.state) + x.bandwidth() / 2 + 3},${y(d[attr]) - 5}) rotate(-90)` 
-            })
-            .attr("font-size", "10px")
-            .text(d => d[attr]);
-    }
 
-    // var checkbox = d3.select("#sort")
-    //     .on("click", function() {
-    //         updateChart(dates[date_slider.value], 500)
-    //         // updateChart(select.property("value"), 500)
-    //     });
+        bars.select('.bar-label-group-bar').attr("width", x.bandwidth())
+            .attr("x", d => x(d.state))
+            .attr("y", d => y(state_summed_up_value_pair[d.state]))
+            // .attr("y", d => y(d[attr]))
+            .attr("height", d => height - margin.bottom - y(state_summed_up_value_pair[d.state]))
+            .attr("opacity", d => `${color_scale(state_summed_up_value_pair[d.state])}%`)
+
+        bars.select('.bar-label-group-label')
+                .attr("transform", function(d){
+                    return `translate(${x(d.state) + x.bandwidth() / 2 +1},${y(state_summed_up_value_pair[d.state]) - 10}) ` 
+                })
+                .text(d => state_summed_up_value_pair[d.state]);
+        // --------------------- bars ---------------------
+    }
+    var checkbox = d3.select("#sort")
+        .on("click", function() {
+            updateChart(filter_min_date, 500)
+            // updateChart(select.property("value"), 500)
+        });
 };
+
