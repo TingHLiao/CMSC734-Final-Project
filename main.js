@@ -39,6 +39,10 @@ Promise.all([
     filter_min_date = '2020/01/22'; //d3.min(dataset, function(d) {return d.date;});
     filter_max_date = d3.max(dataset, function(d) {return d.date;});
     date_interpolate_func = d3.interpolateDate(time_parse(filter_min_date), time_parse(filter_max_date));
+    console.log($('#select-state'))
+    $('#select-state').val('All');
+    // $('#select-state').options[0].selected = true;
+    $('select[multiple]').multiselect('refresh');
     changeSliderMode("time");
     show_secondary_view_options();
     update();
@@ -213,6 +217,17 @@ function show_secondary_view() {
 var select_all_states = true;
 var select_certain_states = [];
 function changeStates(sel) {
+    if (sel.options[0].selected && !select_all_states){
+        for(var i = 1; i < sel.options.length; i++) {
+            var opt = sel.options[i];
+            opt.selected = false;
+        }
+        select_certain_states = [];
+        select_all_states = true;
+        $('select[multiple]').multiselect('refresh');
+    } else{
+    sel.options[0].selected = false;
+    $('select[multiple]').multiselect('refresh');
     select_certain_states = [];
     for(var i = 0; i < sel.options.length; i++) {
         var opt = sel.options[i];
@@ -221,12 +236,14 @@ function changeStates(sel) {
             select_certain_states.push(opt.value);
         }
     }
-    if(select_certain_states.length == 0) {
-        select_all_states = true;
-    } else {
-        select_all_states = false;
+    // if(select_certain_states.length == 0) {
+    //     select_all_states = true;
+    // } else {
+    //     select_all_states = false;
+    // }
+    select_all_states = false;
     }
-    console.log(select_all_states, select_certain_states);
+    // console.log(select_all_states, select_certain_states);
     update();
 
 }

@@ -45,6 +45,7 @@
                         <div class="state-selector"> 
                             <p>Select specific state(s):</p>
                             <select id='select-state' multiple="multiple" onChange="changeStates(this)">
+                                <option value="All">All</option>
                                 <option value="AK">Alaska</option>
                                 <option value="AL">Alabama</option>
                                 <option value="AR">Arkansas</option>
@@ -185,8 +186,9 @@
 </body>
 <script>
     $('select[multiple]').multiselect();
+    // console.log($('select[multiple]'));
 </script>
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 <script src="http://d3js.org/d3.v5.min.js"></script>
@@ -195,7 +197,7 @@
 <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
 <script src="utils/d3-tip.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
-<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<!-- <script src="//code.jquery.com/jquery-1.10.2.js"></script> -->
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script src="main.js"></script>
 <script src="mapview/mapview.js"></script>
