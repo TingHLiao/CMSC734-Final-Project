@@ -72,6 +72,15 @@ function load_bar_chart_time(dataset) {
         var filtered_data = data.filter(function(d) { if( d.date == input) { return d; } });
         max_new_cases = d3.max(data, function(d){return +d[attr];});
         min_new_cases = d3.min(data, function(d){return +d[attr];});
+        
+        var is_empty = true;
+        filtered_data.forEach(function(d) {
+            if (d[attr] != 0) {is_empty = false;}
+        })
+        filtered_data.forEach(function(d) {
+            if (d[attr] == NaN || d[attr] <0) {d[attr] = 0;}
+            return d
+        })
 
         // --------------------- Sort ---------------------
         filtered_data.sort(d3.select("#sort").property("checked")
@@ -99,40 +108,45 @@ function load_bar_chart_time(dataset) {
             .call(d3.axisLeft(y).ticks(null, "s"));
         // --------------------- Axis ---------------------
 
-        // --------------------- bars ---------------------
-        var bars = svg.selectAll(".bar-chart-rect")
+        if (!is_empty) {
+            // --------------------- bars ---------------------
+            var bars = svg.selectAll(".bar-chart-rect")
             .data(filtered_data);
 
-        bars.exit().remove();
+            bars.exit().remove();
 
-        var barsEnter = bars.enter()
+            var barsEnter = bars.enter()
             .append("g")
             .attr("class", "bar-chart-rect")
 
-        barsEnter.append('rect')
+            barsEnter.append('rect')
             .attr("class", "bar-label-group-bar")
             .attr("width", x.bandwidth())
+
+            .attr("height", 0)
             .attr("x", d => x(d.state))
             .attr("fill", map_color[show_attr])
-        
-        barsEnter.append('text')
+
+            barsEnter.append('text')
             .attr("class","bar-label-group-label")
 
-        bars = bars.merge(barsEnter)
+            bars = bars.merge(barsEnter)
             .transition().duration(speed)
 
-        bars.select('.bar-label-group-bar').attr("width", x.bandwidth())
+            bars.select('.bar-label-group-bar').attr("width", x.bandwidth())
             .attr("x", d => x(d.state))
             .attr("y", d => y(d[attr]))
             .attr("height", d => height - margin.bottom - y(d[attr]))
             .attr("opacity", d => `${color_scale(d[attr])}%`)
 
-        bars.select('.bar-label-group-label')
+            bars.select('.bar-label-group-label')
             .attr("transform", function(d){
                 return `translate(${x(d.state) + x.bandwidth() / 2 +1},${y(d[attr]) - 10}) ` 
             })
             .text(d => d[attr]);
-        // --------------------- bars ---------------------
+            // --------------------- bars ---------------------
+        }
+        
     }
     var checkbox = d3.select("#sort")
         .on("click", function() {
