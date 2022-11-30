@@ -113,13 +113,13 @@ function changeSliderMode(mode) {
 
 function update_slider_tag() {
   if(slider_mode == 'time') {
-    $("#slider-value1").css('left', "" + 100*single_value + "%");
+    $("#slider-value1").css('left', "" + (330*single_value - 72*single_value) + "px");
     $("#slider-value2").hide();
     $("#slider-value1").text(sliderSlidingListener([single_value, single_value])[0]);
   } else {
     $("#slider-value2").show();
-    $("#slider-value1").css('left', "" + 100*range_values[0] + "%");
-    $("#slider-value2").css('right', "" + (100 - 100*range_values[1]) + "%");
+    $("#slider-value1").css('left', "" + (330*range_values[0] - 72*range_values[0]) + "px");
+    $("#slider-value2").css('left', "" + (330*range_values[1] - 72*range_values[1]) + "px");
     dates = sliderSlidingListener(range_values);
     $("#slider-value1").text(dates[0]);
     $("#slider-value2").text(dates[1]);
