@@ -1,26 +1,8 @@
 
 var dataset_rollup;
 
-var rollup_method = {
-'new_case': 'sum',
-'new_death': 'sum',
-'daily_vaccinations': 'sum',
-}
-
 function rollup_func(d, xaxis, yaxis) {
-  /*let x_rollup = rollup_method[xaxis];
-  if(x_rollup == 'sum') {
-    var x_func = d3.sum(d, function(e) {return +e[xaxis];})
-  } else if(x_rollup == 'max') {
-    var x_func = d3.max(d, function(e) {return +e[xaxis];})
-  }*/
   var x_func = d3.sum(d, function(e) {return +e[secondary_name_mapping[xaxis]];});
-  /*let y_rollup = rollup_method[yaxis];
-  if(y_rollup == 'sum') {
-    var y_func = d3.sum(d, function(e) {return +e[yaxis];})
-  } else if(y_rollup == 'max') {
-    var y_func = d3.max(d, function(e) {return +e[yaxis];})
-  }*/
   var y_func = d3.sum(d, function(e) {return +e[secondary_name_mapping[yaxis]];});
   return {
     x: x_func,
@@ -32,13 +14,10 @@ var color;
 var keys;
 
 function load_connected_scatter(_dataset, xaxis, yaxis) {
-  // console.log(xaxis, yaxis);
   var X = [];
   var Y = [];
   var dataset_lines = [];
   keys = [];
-  // console.log(dataset);
-  // console.log(xaxis, yaxis);
   last_month_min = filter_max_date.slice(0, 8) + '00';
   last_month_max = filter_max_date.slice(0, 8) + '31';
   last_month = dataset.filter(function(d, i) {
@@ -46,7 +25,6 @@ function load_connected_scatter(_dataset, xaxis, yaxis) {
     var state_bool = true;
     if(select_all_states == false) {
         state_bool = select_certain_states.includes(d.state_abbrev);
-        //console.log(state_bool);
     }
     return date_bool && state_bool;
   });
@@ -141,13 +119,10 @@ function load_connected_scatter(_dataset, xaxis, yaxis) {
       T=d3.map(dataset_lines[i], d=>d.key),
       O=d3.map(dataset_lines[i], d=>'top'),
       stroke=color(key))
-    //animate(item[0], item[1], item[2], item[3]);
     line_items.push(item);
   }
   
   add_legend(keys, color);
-  //console.log(items);
-  //animate(items[0], items[1], items[2], items[3]);
 }
 
 var end_value = null;
@@ -369,8 +344,8 @@ function make_plot(
   yFormat = d3.format(".2s"), // a format specifier string for the y-axis
   ) {
 
-  xDomain = [0, d3.max(X)];
-  yDomain = [0, d3.max(Y)];
+  xDomain = [0, 1.1 * d3.max(X)];
+  yDomain = [0, 1.1 * d3.max(Y)];
 
    // Compute default domains.
   if (xDomain === undefined) xDomain = d3.extent(X);//d3.nice(...d3.extent(X), width / 80);
