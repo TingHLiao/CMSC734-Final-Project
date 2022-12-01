@@ -29,17 +29,21 @@
                                 <button id='btn-time' onclick="changeSliderMode('time'); show_secondary_view_options();">Certain time</button>
                                 <button id='btn-animation' onclick="changeSliderMode('animate');">Animtation</button>
                             </div>
-                            <div style="position: relative">
+                            <div style="position: relative; padding-left: 10px;">
                                 <div id="slider-value1" class="slider-value"></div>
                                 <div id="slider-value2" class="slider-value"></div>
                                 <div id="slider-range" class="slidecontainer"></div>
                                 <div id="slider-single" class="slidecontainer"></div>
                             </div>
                         </div>
-
+                        <div class="time-state-divider">
+                            <svg >
+                                <rect width="1" height="90" rx="1", ry="1" style="fill:#AEAEB2; border-radius: 10px;" />
+                            </svg>
+                        </div>
                         <!-- ------------------------- state selector ------------------------- -->
                         <div class="state-selector"> 
-                            <p>Select specific state(s):</p>
+                            <p style="font-size: 16px;">Select state(s):</p>
                             <select id='select-state' multiple="multiple" onChange="changeStates(this)">
                                 <option value="All">All</option>
                                 <option value="AK">Alaska</option>
