@@ -131,26 +131,39 @@
                         <option value="3" name="secondary-option"></option>
                     </select>
                     <br/>
-                    <div id="secondary-div-x">
-                        <label>X axis: </label>
-                        <select id="secondary-select-x" onchange="change_secondary_axis()"> 
-                            <option value="0" name="secondary-option-x"></option>
-                            <option value="1" name="secondary-option-x"></option>
-                            <option value="2" name="secondary-option-x"></option>
-                            <option value="3" name="secondary-option-x"></option>
-                            <option value="4" name="secondary-option-x"></option>
-                        </select>
+                    <div class="dropdown-parent">
+                        <div id="secondary-div-x" class="dropdown-child">
+                            <label>X axis: </label>
+                            <select id="secondary-select-x" onchange="change_secondary_axis()"> 
+                                <option value="0" name="secondary-option-x"></option>
+                                <option value="1" name="secondary-option-x"></option>
+                                <option value="2" name="secondary-option-x"></option>
+                                <option value="3" name="secondary-option-x"></option>
+                                <option value="4" name="secondary-option-x"></option>
+                            </select>
+                        </div>
+                        <div  id="secondary-div-y" class="dropdown-child">
+                            <label>Y axis: </label>
+                            <select id="secondary-select-y" onchange="change_secondary_axis()"> 
+                                <option value="0" name="secondary-option-y"></option>
+                                <option value="1" name="secondary-option-y"></option>
+                                <option value="2" name="secondary-option-y"></option>
+                                <option value="3" name="secondary-option-y"></option>
+                                <option value="4" name="secondary-option-y"></option>
+                            </select>
+                        </div>
+                        <div  id="secondary-div-r" class="dropdown-child">
+                            <label>Radius: </label>
+                            <select id="secondary-select-r" onchange="change_secondary_axis()"> 
+                                <option value="0" name="secondary-option-r"></option>
+                                <option value="1" name="secondary-option-r"></option>
+                                <option value="2" name="secondary-option-r"></option>
+                                <option value="3" name="secondary-option-r"></option>
+                                <option value="4" name="secondary-option-r"></option>
+                            </select>
+                        </div>
                     </div>
-                    <div  id="secondary-div-y">
-                        <label>Y axis: </label>
-                        <select id="secondary-select-y" onchange="change_secondary_axis()"> 
-                            <option value="0" name="secondary-option-y"></option>
-                            <option value="1" name="secondary-option-y"></option>
-                            <option value="2" name="secondary-option-y"></option>
-                            <option value="3" name="secondary-option-y"></option>
-                            <option value="4" name="secondary-option-y"></option>
-                        </select>
-                    </div>
+                    
                     <div id="sort-toggle">
                         <input type="checkbox" id="sort">	
                         Toggle sort 

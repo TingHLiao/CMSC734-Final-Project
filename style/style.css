@@ -196,3 +196,13 @@ body {
 .bar-chart-rect:hover text {
     opacity: 1;
 }
+
+.dropdown-parent {
+    margin-top: 5px;
+}
+
+.dropdown-child {
+    float: left;
+    margin-top: 2px;
+    margin-right: 12px;
+}

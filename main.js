@@ -1,5 +1,5 @@
 var select_secondary_view = 'connected_scatter';
-var select_secondary_x_axis, select_secondary_y_axis;
+var select_secondary_x_axis, select_secondary_y_axis, select_secondary_radius;
 
 var dataset;
 var state_coords;
@@ -128,20 +128,24 @@ secondary_options = {
         'scatter plot': {
             'x': ['New comfirm cases', 'New death', 'New vaccinations counts', 'COVID inpatient beds', 'Excess death'],
             'y': ['New death', 'New comfirm cases', 'New vaccinations counts', 'COVID inpatient beds', 'Excess death'],
+            'r': ['-', 'New death', 'New comfirm cases', 'New vaccinations counts', 'COVID inpatient beds', 'Excess death']
         },
         'bar chart': {
             'x': [],
             'y': [],
+            'r': [],
         },
     },
     'period': {
         'connected scatter plot': {
             'x': ['New comfirm cases', 'New death', 'New vaccinations counts', 'COVID inpatient beds', 'Excess death'],
             'y': ['New death', 'New comfirm cases', 'New vaccinations counts', 'COVID inpatient beds', 'Excess death'],
+            'r': [],
         },
         'bar chart': {
             'x': [],
             'y': [],
+            'r': [],
         },
     }
 }
@@ -206,6 +210,22 @@ function change_secondary_view() {
     } else {
         $('#secondary-div-y').hide();
     }
+    // r-axis
+    valid_raxis_options = secondary_options[slider_mode][selected]['r'];
+    if(valid_raxis_options.length > 0) {
+        var r_options = $('option[name="secondary-option-r"]');
+        $('#secondary-div-r').show();
+        for(var i = 0; i < r_options.length; i++) {
+            if(i < valid_raxis_options.length) {
+                $(r_options[i]).show();
+                $(r_options[i]).text(valid_raxis_options[i]);
+            } else {
+                $(r_options[i]).hide();
+            }
+        }
+    } else {
+        $('#secondary-div-r').hide();
+    }
     // console.log(selected);
     select_secondary_view = selected;
 
@@ -219,6 +239,9 @@ function change_secondary_axis() {
     var selected_y = document.getElementById('secondary-select-y').value;
     selected_y = secondary_options[slider_mode][select_secondary_view]['y'][+selected_y];
     
+    var selected_r = document.getElementById('secondary-select-r').value;
+    selected_r = secondary_options[slider_mode][select_secondary_view]['r'][+selected_r];
+    
     $('#sort-toggle').hide();
     if (select_secondary_view == 'bar chart') {
         $('#sort-toggle').show();
@@ -226,19 +249,22 @@ function change_secondary_axis() {
     
     select_secondary_x_axis = selected_x;
     select_secondary_y_axis = selected_y;
+    select_secondary_radius = selected_r;
     show_secondary_view();
 }
 
 function show_secondary_view() {
     // console.log(select_secondary_view, select_secondary_x_axis, select_secondary_y_axis);
     d3.select('#secondary_svg').selectAll('*').remove();
-    if(select_secondary_view == 'connected scatter plot') {
-        load_connected_scatter(filtered_dataset, select_secondary_x_axis, select_secondary_y_axis);
+    if(select_secondary_view == 'connected scatter plot' || select_secondary_view == 'scatter plot') {
+        if(slider_mode == 'period')
+            load_connected_scatter(filtered_dataset, select_secondary_x_axis, select_secondary_y_axis);
+        else
+            load_scatter(filtered_dataset, select_secondary_x_axis, select_secondary_y_axis, select_secondary_radius);
+
     }
     else if (select_secondary_view == 'bar chart') {
         load_bar_chart(filtered_dataset, filter_min_date, filter_max_date);
-    } else if (slider_mode == 'time' && select_secondary_view == 'scatter plot') {
-        load_scatter(filtered_dataset, select_secondary_x_axis, select_secondary_y_axis);
     }
 }
 /* secondary view end */
