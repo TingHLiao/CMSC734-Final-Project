@@ -134,6 +134,7 @@ function load_connected_scatter(_dataset, xaxis, yaxis) {
     var x = d3.map(dataset_lines[i], d=>d.value.x);
     var y = d3.map(dataset_lines[i], d=>d.value.y);
     var key = keys[i];
+    render_state = key;
     item = add_line(
       X=x, 
       Y=y, 
@@ -150,6 +151,7 @@ function load_connected_scatter(_dataset, xaxis, yaxis) {
 }
 
 var end_value = null;
+var render_state = null;
 
 function add_legend(keys, color) {
   var svg = d3.select("#secondary_svg")
@@ -257,7 +259,10 @@ function add_line(
     var inter_weight = 1 - (+cur_day / 30);
     X[len - 1] = last_x2 * inter_weight + end_value.x * (1 - inter_weight);
     Y[len - 1] = last_y2 * inter_weight + end_value.y * (1 - inter_weight);
-    T[len - 1] = filter_max_date;
+    if(select_all_states)
+      T[len - 1] = filter_max_date;
+    else
+      T[len - 1] = render_state + ' ' + filter_max_date;
   }
 
   // console.log(X, Y, T, O, I);
