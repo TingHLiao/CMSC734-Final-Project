@@ -127,9 +127,9 @@ function show_map(show_attr) {
 secondary_options = {
     'time': {
         'scatter plot': {
-            'x': ['New comfirm cases', 'New death', 'New vaccinations counts', 'COVID inpatient beds', 'Excess death'],
-            'y': ['New death', 'New comfirm cases', 'New vaccinations counts', 'COVID inpatient beds', 'Excess death'],
-            'r': ['-', 'New death', 'New comfirm cases', 'New vaccinations counts', 'COVID inpatient beds', 'Excess death']
+            'x': ['New confirmed cases', 'New death', 'New vaccinations counts', 'COVID inpatient beds', 'Excess death'],
+            'y': ['New death', 'New confirmed cases', 'New vaccinations counts', 'COVID inpatient beds', 'Excess death'],
+            'r': ['-', 'New death', 'New confirmed cases', 'New vaccinations counts', 'COVID inpatient beds', 'Excess death']
         },
         'bar chart': {
             'x': [],
@@ -139,8 +139,8 @@ secondary_options = {
     },
     'period': {
         'connected scatter plot': {
-            'x': ['New comfirm cases', 'New death', 'New vaccinations counts', 'COVID inpatient beds', 'Excess death'],
-            'y': ['New death', 'New comfirm cases', 'New vaccinations counts', 'COVID inpatient beds', 'Excess death'],
+            'x': ['New confirmed cases', 'New death', 'New vaccinations counts', 'COVID inpatient beds', 'Excess death'],
+            'y': ['New death', 'New confirmed cases', 'New vaccinations counts', 'COVID inpatient beds', 'Excess death'],
             'r': [],
         },
         'bar chart': {
