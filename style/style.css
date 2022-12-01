@@ -197,12 +197,19 @@ body {
     opacity: 1;
 }
 
-.dropdown-parent {
-    margin-top: 5px;
-}
+/* --------------- secondary drop down -------------- */
 
+.secondary select{
+    padding: 0.3em 0.5em;
+    margin: 0.2em 0.2em;
+    background-color: #ddd;
+    color: #333;
+    border-radius: 9px;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+}
 .dropdown-child {
     float: left;
-    margin-top: 2px;
     margin-right: 12px;
 }

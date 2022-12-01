@@ -343,6 +343,11 @@ function make_plot(
   yRange = [height - marginBottom - insetBottom, marginTop + insetTop], // [bottom, top]
   yFormat = d3.format(".2s"), // a format specifier string for the y-axis
   ) {
+  
+  if(slider_mode == 'time') {
+    marginBottom = 80;
+    yRange = [height - marginBottom - insetBottom, marginTop + insetTop];
+  }
 
   xDomain = [0, 1.1 * d3.max(X)];
   yDomain = [0, 1.1 * d3.max(Y)];
@@ -374,7 +379,7 @@ function make_plot(
           .attr("stroke-opacity", 0.1))
       .call(g => g.append("text")
           .attr("x", width)
-          .attr("y", marginBottom - 4)
+          .attr("y", 40)
           .attr("fill", "currentColor")
           .attr("text-anchor", "end")
           .attr('font-size', 14)
