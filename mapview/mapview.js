@@ -52,12 +52,12 @@ var choroScale_inpatient_period = d3.scaleThreshold()
 	.range(d3.schemeRdPu[9]);
 
 var choroScale_exc_death_time = d3.scaleThreshold()
-    .domain([1, 3, 10, 25, 50, 100, 200, 400, 800, 1200]) 
-    .range(d3.schemeRdPu[9]);
+    .domain([0, 3, 10, 25, 60, 110, 160, 200, 300, 400]) 
+    .range(d3.schemePurples[9]);
 
 var choroScale_exc_death_period = d3.scaleThreshold()
-    .domain([1000, 10000, 50000, 200000, 500000, 2000000, 5000000, 10000000, 50000000])
-	.range(d3.schemePurples[9]);
+    .domain([100, 500, 1500, 3000, 5000, 10000, 25000, 50000, 100000, 150000])
+	.range(d3.schemeBuGn[9]);
 
 function stateStyle(f) {
     var color_style = null;
