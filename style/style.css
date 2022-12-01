@@ -165,6 +165,8 @@ body {
 
 /* -------------- bar chart ----------- */
 .bar-chart-rect rect {
+    stroke-width: .5px;
+    stroke:gray;
     /* fill: steelblue; */
     /* opacity: 50%; */
 }
