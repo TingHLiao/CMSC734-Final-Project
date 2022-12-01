@@ -381,8 +381,8 @@ function make_plot(
     yRange = [height - marginBottom - insetBottom, marginTop + insetTop];
   }
 
-  xDomain = [0, 1.1 * d3.max(X)];
-  yDomain = [0, 1.1 * d3.max(Y)];
+  xDomain = [0, 1.2 * d3.max(X)];
+  yDomain = [0, 1.2 * d3.max(Y)];
   
    // Compute default domains.
   if (xDomain === undefined) xDomain = d3.extent(X);//d3.nice(...d3.extent(X), width / 80);
@@ -450,13 +450,13 @@ function load_scatter(dataset, xaxis, yaxis, raxis) {
       .domain(keys)
       .range(d3.schemeSet2);
     
-  X = d3.map(dataset, d=>d[secondary_name_mapping[xaxis]]);
-  Y = d3.map(dataset, d=>d[secondary_name_mapping[yaxis]]);
+  X = d3.map(dataset, d=>+d[secondary_name_mapping[xaxis]]);
+  Y = d3.map(dataset, d=>+d[secondary_name_mapping[yaxis]]);
 
   if(raxis != '-') {
-    radius = d3.map(dataset, d=>d[secondary_name_mapping[raxis]]);
+    radius = d3.map(dataset, d=>+d[secondary_name_mapping[raxis]]);
     r_scale = d3.scaleLinear()
-      .domain([0, d3.max(radius)]) // unit: km
+      .domain([0, d3.max(radius)])
       .range([3, 25]);
   } else {
     radius = undefined;
@@ -464,6 +464,8 @@ function load_scatter(dataset, xaxis, yaxis, raxis) {
   // console.log(X);
   // console.log(Y);
   // console.log(keys);
+  console.log(X);
+  console.log(Y);
   make_plot(X=X, Y=Y, xLabel=xaxis, yLabel=yaxis);
 
   line_items = [];
