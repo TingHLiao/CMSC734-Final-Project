@@ -100,14 +100,19 @@ info.onAdd = function (map) {
 };
 
 info.update = function (props) {
-    
-    if(props == undefined) return;
+    if(props == undefined) {
+        info._div.hidden = true;
+        return;
+    }
+    info._div.hidden = false;
     value = props.values[show_attr];
     var contents;
     if(value == undefined)
-        contents = `<b></b><br />`
-    else
+        info._div.hidden = true;
+    else{
+        info._div.hidden = false;
         contents = props ? `<b>${props.NAME}</b><br />${value}` : 'Hover over a state';
+    }
     this._div.innerHTML = `<h4>US COVID-19 Data</h4>${contents}`;
 };
 
