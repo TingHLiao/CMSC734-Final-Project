@@ -85,7 +85,7 @@ body {
     flex-direction: row;
     align-items: flex-start;
     justify-content: flex-start;
-    height: 110px;
+    height: 100px;
 }
 
 .slider {
