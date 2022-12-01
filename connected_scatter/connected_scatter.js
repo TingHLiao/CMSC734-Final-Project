@@ -186,7 +186,7 @@ function animate(line, path, label, I, duration=10000) {
 
 function show_all_pairs(i) {
   if(slider_mode == 'period'){
-    for(var j = 0; j < line_items.length - 1; j++) {
+    for(var j = 0; j < line_items.length; j++) {
       d3.select(line_items[j][2]._groups[0][i]).style('opacity', "100%");
       d3.select(line_items[j][4]._groups[0][i]).attr('r', 6);
       d3.select(line_items[j][4]._groups[0][i]).attr('fill', color(keys[j]));
@@ -196,7 +196,7 @@ function show_all_pairs(i) {
 
 function hide_all_pairs(i) {
   if(slider_mode == 'period') {
-    for(var j = 0; j < line_items.length - 1; j++) {
+    for(var j = 0; j < line_items.length; j++) {
       d3.select(line_items[j][2]._groups[0][i]).style('opacity', "0%");
       d3.select(line_items[j][4]._groups[0][i]).attr('r', 3);
       d3.select(line_items[j][4]._groups[0][i]).attr('fill', '#fff');
