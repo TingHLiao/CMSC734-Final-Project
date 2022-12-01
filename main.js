@@ -126,7 +126,7 @@ function show_map(show_attr) {
 
 secondary_options = {
     'time': {
-        'scatter plot': {
+        'bubble chart': {
             'x': ['New confirmed cases', 'New death', 'New vaccinations counts', 'COVID inpatient beds', 'Excess death'],
             'y': ['New death', 'New confirmed cases', 'New vaccinations counts', 'COVID inpatient beds', 'Excess death'],
             'r': ['-', 'New death', 'New confirmed cases', 'New vaccinations counts', 'COVID inpatient beds', 'Excess death']
@@ -257,7 +257,7 @@ function change_secondary_axis() {
 function show_secondary_view() {
     // console.log(select_secondary_view, select_secondary_x_axis, select_secondary_y_axis);
     d3.select('#secondary_svg').selectAll('*').remove();
-    if(select_secondary_view == 'connected scatter plot' || select_secondary_view == 'scatter plot') {
+    if(select_secondary_view == 'connected scatter plot' || select_secondary_view == 'bubble chart') {
         if(slider_mode == 'period')
             load_connected_scatter(filtered_dataset, select_secondary_x_axis, select_secondary_y_axis);
         else
