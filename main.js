@@ -152,7 +152,7 @@ secondary_options = {
 }
 
 var secondary_name_mapping = {
-    'New comfirm cases': 'new_case',
+    'New confirmed cases': 'new_case',
     'New death': 'new_death',
     'New vaccinations counts': 'daily_vaccinations',
     'COVID inpatient beds': 'inpatient_beds_used_covid',
