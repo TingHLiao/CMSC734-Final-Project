@@ -166,7 +166,23 @@
 
     <p></p>
     <div class="text-description">
-        The map above shows ......
+        This tool visualizes case numbers of COVID-19 in the United States, collating five main metrics for COVID-19 severity accross all states and territories, and displaying
+        them over time. The five metrics we consider are defined below, along with the sources from which we aquired the corresponding data:
+        <ul>
+            <li> Confirmed Cases -  <a href="https://data.cdc.gov/Case-Surveillance/United-States-COVID-19-Cases-and-Deaths-by-State-o/9mfq-cb36">USA COVID-19 Cases and Deaths by State over Time</a> </li>
+            <li> Deaths (directly due to COVID-19) - <a href="https://data.cdc.gov/Case-Surveillance/United-States-COVID-19-Cases-and-Deaths-by-State-o/9mfq-cb36">USA COVID-19 Cases and Deaths by State over Time</a> </li>
+            <li> COVID-used inpatient beds - <a href="https://healthdata.gov/Hospital/COVID-19-Reported-Patient-Impact-and-Hospital-Capa/g62h-syeh">COVID-19 Reported Patient Impact and Hospital Capacity by State Timeseries</a> </li>
+            <li> Excess Deaths - <a href="https://www.cdc.gov/nchs/nvss/vsrr/covid19/excess_deaths.htm#data-tables">CDC National and State estimates of Excess Deaths</a> </li>
+            <li> Vaccination Counts - <a href="https://covid.ourworldindata.org/data/vaccinations/us_state_vaccinations.csv">USA Vaccination Rate</a> </li>
+        </ul>
+
+        We visualize these metrics in one central view, along with several secondary views. The primary visualization is a timeseries heatmap, through which the user can
+        traverse the data corresponding to one of the metrics above. The user can either parse the data while scrolling through concrete dates, or over a time period.
+        Upon hovering over a particular state, we provide concrete data in a window that appears on the map showing the values for the state in question. The user may also
+        visualize each of these metrics simultaneously in a Parallel coordinate view using the link provided in the control panel.
+
+        Beyond the central map view, there are a number of secondary visualizations that allow the user to analyze the above metrics in further depth. These secondary visualizations 
+        allow the user to dynamically compare different data attributes and visualize their coevolution/corroelation in time.
     </div>
 
 
