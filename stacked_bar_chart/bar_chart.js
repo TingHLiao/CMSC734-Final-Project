@@ -15,8 +15,8 @@ var choroScale_cases_period = d3.scaleThreshold()
 	.range(d3.schemeYlOrRd[9]);
 
 var choroScale_death_time = d3.scaleThreshold()
-    .domain([2, 5, 10, 25, 50, 80, 120, 200, 500, 800, 1200])
-	.range(d3.schemeBlues[9]);
+    .domain([0, 2, 5, 10, 25, 50, 80, 120, 200, 500, 800])
+    .range(d3.schemeBlues[9]);
 
 var choroScale_death_period = d3.scaleThreshold()
     .domain([20, 100, 500, 2000, 8000, 20000, 40000, 60000, 80000, 100000])
