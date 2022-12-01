@@ -20,7 +20,7 @@ var tiles = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z
 }).addTo(myMap);
 
 var choroScale_cases_time = d3.scaleThreshold()
-    .domain([10, 200, 2000, 5000, 10000, 20000, 50000, 90000, 150000, 300000])
+    .domain([10, 50, 200, 2000, 5000, 10000, 20000, 50000, 90000, 150000, 300000])
 	.range(d3.schemeYlOrRd[9]);
 
 var choroScale_cases_period = d3.scaleThreshold()
@@ -28,20 +28,36 @@ var choroScale_cases_period = d3.scaleThreshold()
 	.range(d3.schemeYlOrRd[9]);
 
 var choroScale_death_time = d3.scaleThreshold()
-    .domain([1, 5, 10, 25, 50, 100, 200, 500, 800, 1200])
+    .domain([2, 5, 10, 25, 50, 80, 120, 200, 500, 800, 1200])
 	.range(d3.schemeBlues[9]);
 
 var choroScale_death_period = d3.scaleThreshold()
-    .domain([100, 500, 2000, 8000, 20000, 40000, 60000, 80000, 100000])
+    .domain([20, 100, 500, 2000, 8000, 20000, 40000, 60000, 80000, 100000])
 	.range(d3.schemeBlues[9]);
 
 var choroScale_vac_time = d3.scaleThreshold()
-    .domain([100, 1000, 5000, 20000, 40000, 80000, 160000, 350000, 500000])
+    .domain([100, 300, 1000, 3000, 8000, 20000, 40000, 80000, 160000, 350000, 500000])
     .range(d3.schemeBuGn[9]);
 
 var choroScale_vac_period = d3.scaleThreshold()
     .domain([1000, 10000, 50000, 200000, 500000, 2000000, 5000000, 10000000, 50000000])
 	.range(d3.schemeBuGn[9]);
+    
+var choroScale_inpatient_time = d3.scaleThreshold()
+    .domain([ 10, 25, 50, 100, 200, 500, 800, 1200, 5000])
+    .range(d3.schemeRdPu[9]);
+
+var choroScale_inpatient_period = d3.scaleThreshold()
+    .domain([1000, 3000, 10000, 50000, 200000, 500000, 2000000, 5000000])
+	.range(d3.schemeRdPu[9]);
+
+var choroScale_exc_death_time = d3.scaleThreshold()
+    .domain([100, 1000, 5000, 20000, 40000, 80000, 160000, 350000, 500000])
+    .range(d3.schemePurples[9]);
+
+var choroScale_exc_death_period = d3.scaleThreshold()
+    .domain([1000, 10000, 50000, 200000, 500000, 2000000, 5000000, 10000000, 50000000])
+	.range(d3.schemePurples[9]);
 
 function stateStyle(f) {
     var color_style = null;
@@ -55,11 +71,11 @@ function stateStyle(f) {
         if (slider_mode == 'time') color_style = choroScale_vac_time;
         else color_style = choroScale_vac_period;
     } else if (show_attr == 'exc_death') {
-        if (slider_mode == 'time') color_style = choroScale_death_time;
-        else color_style = choroScale_death_period;
+        if (slider_mode == 'time') color_style = choroScale_exc_death_time;
+        else color_style = choroScale_exc_death_period;
     } else if (show_attr == 'inpatient') {
-        if (slider_mode == 'time') color_style = choroScale_vac_time;
-        else color_style = choroScale_vac_period;
+        if (slider_mode == 'time') color_style = choroScale_inpatient_time;
+        else color_style = choroScale_inpatient_period;
     }
     return {
         fillColor: color_style(f.properties.values[show_attr]),
