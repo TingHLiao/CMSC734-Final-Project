@@ -31,7 +31,7 @@ var line_items = [];
 var color;
 var keys;
 
-function load_connected_scatter(dataset, xaxis, yaxis) {
+function load_connected_scatter(_dataset, xaxis, yaxis) {
   // console.log(xaxis, yaxis);
   var X = [];
   var Y = [];
@@ -39,18 +39,43 @@ function load_connected_scatter(dataset, xaxis, yaxis) {
   keys = [];
   // console.log(dataset);
   // console.log(xaxis, yaxis);
+  last_month_min = filter_max_date.slice(0, 8) + '00';
+  last_month_max = filter_max_date.slice(0, 8) + '31';
+  last_month = dataset.filter(function(d, i) {
+    var date_bool = d.date >= last_month_min && d.date <= last_month_max;
+    var state_bool = true;
+    if(select_all_states == false) {
+        state_bool = select_certain_states.includes(d.state_abbrev);
+        //console.log(state_bool);
+    }
+    return date_bool && state_bool;
+  });
+
   if(select_all_states) {
     dataset_rollup = d3.nest()
       .key(function(d) {return d.date.slice(0, 7);})
       .rollup(function(d) {
         return rollup_func(d, xaxis, yaxis);
       })
-      .entries(dataset);
+      .entries(_dataset);
     
+    last_month = d3.nest()
+      .key(function(d) {return d.date.slice(0, 7);})
+      .rollup(function(d) {
+        return rollup_func(d, xaxis, yaxis);
+      })
+      .entries(last_month);
+
     X = d3.map(dataset_rollup, d=>d.value.x);
     Y = d3.map(dataset_rollup, d=>d.value.y);
     
     dataset_lines = [dataset_rollup];
+    var cur_day = filter_max_date.slice(8);
+    var inter_weight = 1 - (+cur_day / 30);
+    var last_x = X[X.length - 2] * inter_weight + last_month[0].value.x * (1 - inter_weight);
+    var last_y = Y[Y.length - 2] * inter_weight + last_month[0].value.y * (1 - inter_weight);
+    X.push(last_x);
+    Y.push(last_y);
     keys.push('All states');
   } else {
     dataset_rollup = d3.nest()
@@ -59,11 +84,29 @@ function load_connected_scatter(dataset, xaxis, yaxis) {
       .rollup(function(d) {
         return rollup_func(d, xaxis, yaxis);
       })
-      .entries(dataset);
+      .entries(_dataset);
+    
+    last_month = d3.nest()
+      .key(function(d) {return d.state_abbrev})
+      .key(function(d) {return d.date.slice(0, 7);})
+      .rollup(function(d) {
+        return rollup_func(d, xaxis, yaxis);
+      })
+      .entries(last_month);
+    
     // console.log(dataset_rollup);
     for(var i = 0; i < dataset_rollup.length; i++) {
-      X = X.concat(d3.map(dataset_rollup[i].values, d=>d.value.x));
-      Y = Y.concat(d3.map(dataset_rollup[i].values, d=>d.value.y));
+      xi = d3.map(dataset_rollup[i].values, d=>d.value.x);
+      yi = d3.map(dataset_rollup[i].values, d=>d.value.y);
+      X = X.concat(xi);
+      Y = Y.concat(yi);
+      
+      var cur_day = filter_max_date.slice(8);
+      var inter_weight = 1 - (+cur_day / 30);
+      var last_x = xi[xi.length - 2] * inter_weight + last_month[i].values[0].value.x * (1 - inter_weight);
+      var last_y = yi[yi.length - 2] * inter_weight + last_month[i].values[0].value.y * (1 - inter_weight);
+      X.push(last_x);
+      Y.push(last_y);
       dataset_lines.push(dataset_rollup[i].values);
       keys.push(dataset_rollup[i].key);
     }
@@ -79,6 +122,15 @@ function load_connected_scatter(dataset, xaxis, yaxis) {
 
   line_items = [];
   for(var i = 0; i < dataset_lines.length; i++) {
+    
+    if(select_all_states) {
+      end_value = last_month[0].value;
+      //console.log(end_value);
+    } else {
+      //console.log(keys[i], last_month[i]);
+      end_value = last_month[i].values[0].value;
+      //console.log(end_value);
+    }
     var x = d3.map(dataset_lines[i], d=>d.value.x);
     var y = d3.map(dataset_lines[i], d=>d.value.y);
     var key = keys[i];
@@ -97,6 +149,7 @@ function load_connected_scatter(dataset, xaxis, yaxis) {
   //animate(items[0], items[1], items[2], items[3]);
 }
 
+var end_value = null;
 
 function add_legend(keys, color) {
   var svg = d3.select("#secondary_svg")
@@ -156,7 +209,7 @@ function animate(line, path, label, I, duration=10000) {
 
 function show_all_pairs(i) {
   if(slider_mode == 'period'){
-    for(var j = 0; j < line_items.length; j++) {
+    for(var j = 0; j < line_items.length - 1; j++) {
       d3.select(line_items[j][2]._groups[0][i]).style('opacity', "100%");
       d3.select(line_items[j][4]._groups[0][i]).attr('r', 6);
       d3.select(line_items[j][4]._groups[0][i]).attr('fill', color(keys[j]));
@@ -166,7 +219,7 @@ function show_all_pairs(i) {
 
 function hide_all_pairs(i) {
   if(slider_mode == 'period') {
-    for(var j = 0; j < line_items.length; j++) {
+    for(var j = 0; j < line_items.length - 1; j++) {
       d3.select(line_items[j][2]._groups[0][i]).style('opacity', "0%");
       d3.select(line_items[j][4]._groups[0][i]).attr('r', 3);
       d3.select(line_items[j][4]._groups[0][i]).attr('fill', '#fff');
@@ -192,13 +245,21 @@ function add_line(
 ) {
   var I = d3.range(X.length);
 
-  if(X.length > 1) {
-    X = X.slice(0, -1);
-    Y = Y.slice(0, -1);
-    T = T.slice(0, -1);
-    O = O.slice(0, -1);
-    I = d3.range(X.length);
+  var len = X.length;
+  if(slider_mode == 'period' && len > 1 && end_value != null) {
+    var last_x = X[len - 1];
+    var last_y = Y[len - 1];
+    var last_x2 = X[len - 2];
+    var last_y2 = Y[len - 2];
+    //console.log(X[len-1], Y[len-1]);
+    
+    var cur_day = filter_max_date.slice(8);
+    var inter_weight = 1 - (+cur_day / 30);
+    X[len - 1] = last_x2 * inter_weight + end_value.x * (1 - inter_weight);
+    Y[len - 1] = last_y2 * inter_weight + end_value.y * (1 - inter_weight);
+    T[len - 1] = filter_max_date;
   }
+
   // console.log(X, Y, T, O, I);
 
   // Construct the line generator.
@@ -249,7 +310,12 @@ function add_line(
       .attr("transform", i => `translate(${xScale(X[i])},${yScale(Y[i])})`);
 
   if(slider_mode == 'time')
-      label.classed('show-when-hover', false);
+    label.classed('show-when-hover', false);
+  else {
+    d3.select(label._groups[0][len - 1])
+      .classed('show-when-hover', false)
+      .style('opacity', '100%');
+  }
 
   if (T) label.append("text")
       .text(i => T[i])
