@@ -296,6 +296,14 @@ function add_line(
       .attr("cx", i => xScale(X[i]))
       .attr("cy", i => yScale(Y[i]))
       .attr("r", r)
+      .style('opacity', function(d, i) {
+        if(slider_mode == 'time'){
+          if(raduis != undefined)
+            return '' + (100 * r / 25) + '%';
+          else
+            return '50%';
+        }
+      })
       .on('mouseover', function(d, i) {
         show_all_pairs(i);
       })
@@ -472,8 +480,8 @@ function load_scatter(dataset, xaxis, yaxis, raxis) {
       [Y[i]], 
       [keys[i]],
       d3.map([X[i]], d=>'top'),
-      color(keys[i]),
-      color(keys[i]),
+      "black",
+      "#1f77b4",
       r,
       i)
     //animate(item[0], item[1], item[2], item[3]);
