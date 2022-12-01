@@ -250,19 +250,19 @@ function changeStates(sel) {
     sel.options[0].selected = false;
     $('select[multiple]').multiselect('refresh');
     select_certain_states = [];
-    for(var i = 0; i < sel.options.length; i++) {
+    for(var i = 1; i < sel.options.length; i++) {
         var opt = sel.options[i];
 
         if(opt.selected) {
             select_certain_states.push(opt.value);
         }
     }
-    // if(select_certain_states.length == 0) {
-    //     select_all_states = true;
-    // } else {
-    //     select_all_states = false;
-    // }
-    select_all_states = false;
+        select_all_states = false;
+    }
+    if(select_certain_states.length == 0) {
+        select_all_states = true;
+        sel.options[0].selected = true;
+        $('select[multiple]').multiselect('refresh');
     }
     // console.log(select_all_states, select_certain_states);
     update();
