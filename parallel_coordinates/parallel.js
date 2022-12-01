@@ -179,10 +179,6 @@ function update() {
       return date_bool;
   })
 
-  // var filtered_dataset = dataset.filter(function(d, i) {
-  //     return d.date >= filter_min_date && d.date <= filter_max_date;
-  // });
-  // console.log(min_data, max_data)
 
   data = [];
   data_min = [];
@@ -209,57 +205,11 @@ function update() {
     }
   }
 
-  // min_data.map(function(d) {
-  //   for (var k in d) {
-  //     if (!_.isNaN(min_data[0][k] - 0) && (k == 'total_new_case' || k == 'total_new_death' || k == 'total_daily_vaccinations' || k == 'total_inpatient_beds_used' || k == 'total_inpatient_beds_used_covid' || k == 'state')) {
-  //         d[k] = parseFloat(d[k]) || 0;
-  //     }
-  //     if(k == 'total_new_case' || k == 'total_new_death' || k == 'total_daily_vaccinations' || k == 'total_inpatient_beds_used' || k == 'total_inpatient_beds_used_covid'){
-  //       for(var i = 0; i < data.length; i++) {
-  //         if(data_min[i].state == d.state) {
-  //             if(data_min[i][k] == undefined) {
-  //               data_min[i][k] = 0;
-  //             }
-  //             // console.log(data[i][k])
-  //             data_min[i][k] = d[k];
-  //         }
-  //       }
-  //   }}
-  //   return d;
-  // })
-
-  // console.log(max_data)
-    
-
-  // max_data.map(function(d) {
-  //   for (var k in d) {
-  //     if (!_.isNaN(max_data[0][k] - 0) && (k == 'total_new_case' || k == 'total_new_death' || k == 'total_daily_vaccinations' || k == 'total_inpatient_beds_used' || k == 'total_inpatient_beds_used_covid' || k == 'state')) {
-  //         d[k] = parseFloat(d[k]) || 0;
-  //     }
-  //     if(k == 'total_new_case' || k == 'total_new_death' || k == 'total_daily_vaccinations' || k == 'total_inpatient_beds_used' || k == 'total_inpatient_beds_used_covid'){
-  //       for(var i = 0; i < data.length; i++) {
-  //         if(data[i].state == d.state) {
-  //             // if(data[i][k] == undefined) {
-  //             //     data[i][k] = 0;
-  //             // }
-  //             // console.log(data[i][k])
-  //             data[i][k] = d[k]-data_min[i][k];
-  //         }
-  //       }
-  //   }}
-  //   return d;
-  // })
   for(var i = 0; i < max_data.length; i++) {
-    // console.log(min_data[i])
     for (var k in max_data[i]) {
-      // console.log(k)
       if(k == 'total_new_case' || k == 'total_new_death' || k == 'total_daily_vaccinations' || k == 'total_inpatient_beds_used' || k == 'total_inpatient_beds_used_covid'){
         for(var i = 0; i < data.length; i++) {
           if(data[i].state == max_data[i].state) {
-              // if(data_min[i][k] == undefined) {
-              //   data_min[i][k] = 0;
-              // }
-              // console.log(data[i][k])
               data[i][k] = parseFloat(max_data[i][k]) - data_min[i][k];
           }
         }
@@ -347,27 +297,6 @@ function update() {
     .text(String)
     .append("title")
         .text("Click to invert. Drag to reorder");
-
-    // Add and store a brush for each axis.
-    // g.append("svg:g")
-    // .attr("class", "brush")
-    // .each(function(d) { 
-    //     console.log(yscale[d].range());
-    //     d3.select(this).call(yscale[d].brush = d3.brushY().extent([[yscale[d].range()[1], 0], [yscale[d].range()[0], 2]])
-    //     // .y(yscale[d])
-    //     .on("brush", brush)); 
-        
-    // })
-    // .selectAll("rect")
-    // .style("visibility", null)
-    // .attr("x", -23)
-    // .attr("width", 36)
-    // .append("title")
-    //     .text("Drag up or down to brush along this axis");
-
-    // g.selectAll(".extent")
-    // .append("title")
-    //     .text("Drag or resize this filter");
 
 
     legend = create_legend(colors,brush);
@@ -577,19 +506,11 @@ function brush() {
   var tallies = _(selected)
     .groupBy(function(d) { return d.state; })
 // var tallies = d3.group(selected, d => d.state);
-// console.log(tallies["Alaska"]);
-// console.log(selected[0].state);
-
   // include empty groups
   _(colors).each(function(v,k) { tallies[k] = tallies[k] || []; });
   legend
     .style("text-decoration", function(d) { return _.contains(excluded_groups,d) ? "line-through" : null; })
     .attr("class", function(d) {
-      // if((d[0].charCodeAt(0)-'M'.charCodeAt(0))<= 0){
-      //   return (tallies[d].length > 0)
-      //     ? "row column"
-      //     : "row off column";
-      // }
       return (tallies[d].length > 0)
            ? "row"
            : "row off";
