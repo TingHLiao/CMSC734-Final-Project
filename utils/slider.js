@@ -48,27 +48,43 @@ function animateSlider() {
   // console.log(is_animate);
   if(is_animate == false) {
     is_animate = true;
-    set_inactive(document.getElementById('btn-time'));
+    //set_inactive(document.getElementById('btn-time'));
+    //set_inactive(document.getElementById('btn-period'));
     set_active(document.getElementById('btn-animation'));
     animateCallback();
+    if(slider_mode == 'period') {
+      range_values[1] = 0;
+    }
     document.getElementById('btn-animation').innerHTML = 'Pause animation';
   } else {
     is_animate = false;
-    set_active(document.getElementById('btn-time'));
     set_inactive(document.getElementById('btn-animation'));
+    /*if(slider_mode == 'period') {
+      set_active(document.getElementById('btn-period'));
+    } else {
+      set_active(document.getElementById('btn-time'));
+    }*/
     document.getElementById('btn-animation').innerHTML = 'Play animation';
   }
 }
 function animateCallback() {
-  single_value = single_value + 0.001;
-  $('#slider-single').slider('option', 'value', single_value);
-  update_slider_tag(single_value);
+  if(slider_mode == 'time') {
+    single_value = single_value + 0.001;
+    $('#slider-single').slider('option', 'value', single_value);
+    update_slider_tag(single_value);
 
-  if(single_value > 1)
-    single_value = 0;
+    if(single_value > 1)
+      single_value = 0;
+  } else {
+    range_values[1] = range_values[1] + 0.001;
+    $('#slider-range').slider('option', 'values', range_values);
+    update_slider_tag(range_values);
+    if(range_values[1] > 1) range_values[1] = 0;
+  }
+  
   
   if(is_animate)
-    setTimeout(animateCallback, 100);
+    setTimeout(animateCallback, 80);
 }
 
 var slider_mode = 'time';
@@ -76,12 +92,13 @@ $('#slider-range').hide();
 
 function changeSliderMode(mode) {
 
+  if(mode != 'animate') {
+    set_inactive(document.getElementById('btn-time'));
+    set_inactive(document.getElementById('btn-period'));
+    set_inactive(document.getElementById('btn-animation'));
+  }
 
-  set_inactive(document.getElementById('btn-time'));
-  set_inactive(document.getElementById('btn-period'));
-  set_inactive(document.getElementById('btn-animation'));
-
-  if(mode == 'time' || mode == 'animate') {
+  if(mode == 'time') {
     slider_mode = 'time';
     set_active(document.getElementById('btn-time'));
     $('#slider-single').show();
@@ -93,7 +110,7 @@ function changeSliderMode(mode) {
     $('#slider-single').hide();
     $('#slider-range').show();
     updateDateRange(range_values);
-  } else{
+  } else if (mode == 'period') {
     slider_mode = 'period';
     set_active(document.getElementById('btn-period'));
     $('#slider-single').hide();
