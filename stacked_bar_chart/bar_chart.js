@@ -6,6 +6,46 @@ var map_attr  = {
     'inpatient': 'inpatient_beds_used_covid'
 };
 
+var choroScale_cases_time = d3.scaleThreshold()
+    .domain([10, 50, 200, 2000, 5000, 10000, 20000, 50000, 90000, 150000, 300000])
+	.range(d3.schemeYlOrRd[9]);
+
+var choroScale_cases_period = d3.scaleThreshold()
+    .domain([500, 5000, 25000, 80000, 250000, 1000000, 2000000, 5000000, 8000000])
+	.range(d3.schemeYlOrRd[9]);
+
+var choroScale_death_time = d3.scaleThreshold()
+    .domain([2, 5, 10, 25, 50, 80, 120, 200, 500, 800, 1200])
+	.range(d3.schemeBlues[9]);
+
+var choroScale_death_period = d3.scaleThreshold()
+    .domain([20, 100, 500, 2000, 8000, 20000, 40000, 60000, 80000, 100000])
+	.range(d3.schemeBlues[9]);
+
+var choroScale_vac_time = d3.scaleThreshold()
+    .domain([100, 300, 1000, 3000, 8000, 20000, 40000, 80000, 160000, 350000, 500000])
+    .range(d3.schemeBuGn[9]);
+
+var choroScale_vac_period = d3.scaleThreshold()
+    .domain([1000, 10000, 50000, 200000, 500000, 2000000, 5000000, 10000000, 50000000])
+	.range(d3.schemeBuGn[9]);
+    
+var choroScale_inpatient_time = d3.scaleThreshold()
+    .domain([ 10, 25, 50, 100, 200, 500, 800, 1200, 5000])
+    .range(d3.schemeRdPu[9]);
+
+var choroScale_inpatient_period = d3.scaleThreshold()
+    .domain([1000, 3000, 10000, 50000, 200000, 500000, 2000000, 5000000])
+	.range(d3.schemeRdPu[9]);
+
+var choroScale_exc_death_time = d3.scaleThreshold()
+    .domain([100, 1000, 5000, 20000, 40000, 80000, 160000, 350000, 500000])
+    .range(d3.schemePurples[9]);
+
+var choroScale_exc_death_period = d3.scaleThreshold()
+    .domain([1000, 10000, 50000, 200000, 500000, 2000000, 5000000, 10000000, 50000000])
+	.range(d3.schemePurples[9]);
+
 function load_bar_chart(dataset, filter_min_date, filter_max_date) {
     var is_time = filter_max_date == filter_min_date; // time or period
     if (is_time) {
@@ -23,9 +63,11 @@ function load_bar_chart_time(dataset) {
     var states = [];
     var x, y, color_scale, max_new_cases, svg, xAxis, yAxis;
     var map_color = { 
-        'conf_cases': 'darkorange',
-        'conf_death': 'steelblue',
-        'vac_cnt': 'forestgreen'
+        'conf_cases': choroScale_cases_time,
+        'conf_death': choroScale_death_time,
+        'vac_cnt': choroScale_vac_time,
+        'exc_death': choroScale_exc_death_time,
+        'inpatient': choroScale_inpatient_time
     };
 
     //-------------------------------------------------------------------------------------------------------------------------
@@ -41,8 +83,6 @@ function load_bar_chart_time(dataset) {
     svg = d3.select("#secondary_svg"),
     margin = {top: 65, left: 35, bottom: 10, right: 10};
 
-    // width = +svg.attr("width") - margin.left - margin.right,
-    // height = +svg.attr("height") - margin.top - margin.bottom;
     width = 700 - margin.left - margin.right;
     height = 660 - margin.top - margin.bottom;
 
@@ -65,7 +105,6 @@ function load_bar_chart_time(dataset) {
 		.attr("class", "y-axis")
 
     updateChart(filter_min_date, 0)
-
 
     //-----------------------------------------------------------------------------
     function updateChart(input, speed) {
@@ -125,7 +164,7 @@ function load_bar_chart_time(dataset) {
 
             .attr("height", 0)
             .attr("x", d => x(d.state))
-            .attr("fill", map_color[show_attr])
+            .attr("fill", d => map_color[show_attr](d[attr]))
 
             barsEnter.append('text')
             .attr("class","bar-label-group-label")
@@ -137,7 +176,7 @@ function load_bar_chart_time(dataset) {
             .attr("x", d => x(d.state))
             .attr("y", d => y(d[attr]))
             .attr("height", d => height - margin.bottom - y(d[attr]))
-            .attr("opacity", d => `${color_scale(d[attr])}%`)
+            // .attr("opacity", d => `${color_scale(d[attr])}%`)
 
             bars.select('.bar-label-group-label')
             .attr("transform", function(d){
@@ -163,9 +202,11 @@ function load_bar_chart_period(dataset) {
     var states = [];
     var x, y, color_scale, max_new_cases, svg, xAxis, yAxis;
     var map_color = { 
-        'conf_cases': 'darkorange',
-        'conf_death': 'steelblue',
-        'vac_cnt': 'forestgreen'
+        'conf_cases': choroScale_cases_period,
+        'conf_death': choroScale_death_period,
+        'vac_cnt': choroScale_vac_period,
+        'exc_death': choroScale_exc_death_period,
+        'inpatient': choroScale_inpatient_period
     };
 
     //-------------------------------------------------------------------------------------------------------------------------
@@ -266,7 +307,7 @@ function load_bar_chart_period(dataset) {
             .attr("class", "bar-label-group-bar")
             .attr("width", x.bandwidth())
             .attr("x", d => x(d.state))
-            .attr("fill", map_color[show_attr])
+            .attr("fill", d => map_color[show_attr](state_summed_up_value_pair[d.state]))
         
         barsEnter.append('text')
             .attr("class","bar-label-group-label")
@@ -278,7 +319,7 @@ function load_bar_chart_period(dataset) {
             .attr("x", d => x(d.state))
             .attr("y", d => y(state_summed_up_value_pair[d.state]))
             .attr("height", d => height - margin.bottom - y(state_summed_up_value_pair[d.state]))
-            .attr("opacity", d => `${color_scale(state_summed_up_value_pair[d.state])}%`)
+            // .attr("opacity", d => `${color_scale(state_summed_up_value_pair[d.state])}%`)
 
         bars.select('.bar-label-group-label')
             .attr("transform", function(d){
