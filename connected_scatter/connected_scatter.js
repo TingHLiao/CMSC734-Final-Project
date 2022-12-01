@@ -269,7 +269,7 @@ function add_line(
   var circles = svg.append("g")
       .attr("fill", fill)
       .attr("stroke", stroke)
-      .attr("stroke-width", strokeWidth)
+      .attr("stroke-width", 1)
       .selectAll("g")
       .data(I)
       .join("g")
