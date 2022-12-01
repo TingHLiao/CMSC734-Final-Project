@@ -53,7 +53,7 @@ function animateSlider() {
     set_active(document.getElementById('btn-animation'));
     animateCallback();
     if(slider_mode == 'period') {
-      range_values[1] = 0;
+      range_values[1] = range_values[0];
     }
     document.getElementById('btn-animation').innerHTML = 'Pause animation';
   } else {
@@ -79,7 +79,7 @@ function animateCallback() {
     range_values[1] = range_values[1] + 0.001;
     $('#slider-range').slider('option', 'values', range_values);
     update_slider_tag(range_values);
-    if(range_values[1] > 1) range_values[1] = 0;
+    if(range_values[1] > 1) range_values[1] = range_values[0];
   }
   
   
