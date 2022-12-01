@@ -164,7 +164,6 @@ function load_bar_chart_time(dataset) {
 
             .attr("height", 0)
             .attr("x", d => x(d.state))
-            .attr("fill", d => map_color[show_attr](d[attr]))
 
             barsEnter.append('text')
             .attr("class","bar-label-group-label")
@@ -176,7 +175,7 @@ function load_bar_chart_time(dataset) {
             .attr("x", d => x(d.state))
             .attr("y", d => y(d[attr]))
             .attr("height", d => height - margin.bottom - y(d[attr]))
-            // .attr("opacity", d => `${color_scale(d[attr])}%`)
+            .attr("fill", d => map_color[show_attr](d[attr]))
 
             bars.select('.bar-label-group-label')
             .attr("transform", function(d){
@@ -307,7 +306,6 @@ function load_bar_chart_period(dataset) {
             .attr("class", "bar-label-group-bar")
             .attr("width", x.bandwidth())
             .attr("x", d => x(d.state))
-            .attr("fill", d => map_color[show_attr](state_summed_up_value_pair[d.state]))
         
         barsEnter.append('text')
             .attr("class","bar-label-group-label")
@@ -319,7 +317,8 @@ function load_bar_chart_period(dataset) {
             .attr("x", d => x(d.state))
             .attr("y", d => y(state_summed_up_value_pair[d.state]))
             .attr("height", d => height - margin.bottom - y(state_summed_up_value_pair[d.state]))
-            // .attr("opacity", d => `${color_scale(state_summed_up_value_pair[d.state])}%`)
+            .attr("fill", d => map_color[show_attr](state_summed_up_value_pair[d.state]))
+
 
         bars.select('.bar-label-group-label')
             .attr("transform", function(d){
