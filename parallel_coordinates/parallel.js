@@ -113,6 +113,8 @@ var filter_max_date;
 var min_data;
 var max_data;
 var date_interpolate_func;
+var flag = false;
+var scale_flag = false;
 var date_format = d3.timeFormat('%Y/%m/%d');
 function set_inactive(btn) {
   // dum funciton
@@ -131,6 +133,8 @@ function updateDateRange(values) {
     filter_min_date = structuredClone(date_format(date_interpolate_func(values[0])));
     filter_max_date = structuredClone(date_format(date_interpolate_func(values[1])));
     // console.log(filter_max_date, filter_min_date);
+    if (!flag)
+      return
     update();
 }
 
@@ -156,14 +160,14 @@ Promise.all([
       }
       i++;
     };
-
+    flag = true;
     update();
 });
 function update() {
-  filtered_dataset = dataset.filter(function(d, i) {
-    var date_bool = d.date >= filter_min_date && d.date <= filter_max_date;
-    return date_bool;
-  });
+  // filtered_dataset = dataset.filter(function(d, i) {
+  //   var date_bool = d.date >= filter_min_date && d.date <= filter_max_date;
+  //   return date_bool;
+  // });
 
   min_data = dataset.filter(function(d, i) {
       var date_bool = d.date == filter_min_date;
@@ -181,51 +185,100 @@ function update() {
   // console.log(min_data, max_data)
 
   data = [];
+  data_min = [];
   for (var key in colors) {
       data.push({"state": key})
+      data_min.push({"state": key})
   };
 
-  min_data.map(function(d) {
-    for (var k in d) {
-      if (!_.isNaN(min_data[0][k] - 0) && (k == 'total_new_case' || k == 'total_new_death' || k == 'total_daily_vaccinations' || k == 'total_inpatient_beds_used' || k == 'total_inpatient_beds_used_covid' || k == 'state')) {
-          d[k] = parseFloat(d[k]) || 0;
-      }
+  for(var i = 0; i < min_data.length; i++) {
+    // console.log(min_data[i])
+    for (var k in min_data[i]) {
+      // console.log(k)
       if(k == 'total_new_case' || k == 'total_new_death' || k == 'total_daily_vaccinations' || k == 'total_inpatient_beds_used' || k == 'total_inpatient_beds_used_covid'){
         for(var i = 0; i < data.length; i++) {
-          if(data[i].state == d.state) {
-              if(data[i][k] == undefined) {
-                  data[i][k] = 0;
+          if(data_min[i].state == min_data[i].state) {
+              if(data_min[i][k] == undefined) {
+                data_min[i][k] = 0;
               }
-              data[i][k] += +d[k];
+              // console.log(data[i][k])
+              data_min[i][k] = parseFloat(min_data[i][k]);
           }
         }
-    }}
-    return d;
-  });
-  max_data.map(function(d) {
-    for (var k in d) {
-      if (!_.isNaN(min_data[0][k] - 0) && (k == 'total_new_case' || k == 'total_new_death' || k == 'total_daily_vaccinations' || k == 'total_inpatient_beds_used' || k == 'total_inpatient_beds_used_covid' || k == 'state')) {
-          d[k] = parseFloat(d[k]) || 0;
       }
+    }
+  }
+
+  // min_data.map(function(d) {
+  //   for (var k in d) {
+  //     if (!_.isNaN(min_data[0][k] - 0) && (k == 'total_new_case' || k == 'total_new_death' || k == 'total_daily_vaccinations' || k == 'total_inpatient_beds_used' || k == 'total_inpatient_beds_used_covid' || k == 'state')) {
+  //         d[k] = parseFloat(d[k]) || 0;
+  //     }
+  //     if(k == 'total_new_case' || k == 'total_new_death' || k == 'total_daily_vaccinations' || k == 'total_inpatient_beds_used' || k == 'total_inpatient_beds_used_covid'){
+  //       for(var i = 0; i < data.length; i++) {
+  //         if(data_min[i].state == d.state) {
+  //             if(data_min[i][k] == undefined) {
+  //               data_min[i][k] = 0;
+  //             }
+  //             // console.log(data[i][k])
+  //             data_min[i][k] = d[k];
+  //         }
+  //       }
+  //   }}
+  //   return d;
+  // })
+
+  // console.log(max_data)
+    
+
+  // max_data.map(function(d) {
+  //   for (var k in d) {
+  //     if (!_.isNaN(max_data[0][k] - 0) && (k == 'total_new_case' || k == 'total_new_death' || k == 'total_daily_vaccinations' || k == 'total_inpatient_beds_used' || k == 'total_inpatient_beds_used_covid' || k == 'state')) {
+  //         d[k] = parseFloat(d[k]) || 0;
+  //     }
+  //     if(k == 'total_new_case' || k == 'total_new_death' || k == 'total_daily_vaccinations' || k == 'total_inpatient_beds_used' || k == 'total_inpatient_beds_used_covid'){
+  //       for(var i = 0; i < data.length; i++) {
+  //         if(data[i].state == d.state) {
+  //             // if(data[i][k] == undefined) {
+  //             //     data[i][k] = 0;
+  //             // }
+  //             // console.log(data[i][k])
+  //             data[i][k] = d[k]-data_min[i][k];
+  //         }
+  //       }
+  //   }}
+  //   return d;
+  // })
+  for(var i = 0; i < max_data.length; i++) {
+    // console.log(min_data[i])
+    for (var k in max_data[i]) {
+      // console.log(k)
       if(k == 'total_new_case' || k == 'total_new_death' || k == 'total_daily_vaccinations' || k == 'total_inpatient_beds_used' || k == 'total_inpatient_beds_used_covid'){
         for(var i = 0; i < data.length; i++) {
-          if(data[i].state == d.state) {
-              if(data[i][k] == undefined) {
-                  data[i][k] = 0;
-              }
-              data[i][k] = d[k]-data[i][k];
+          if(data[i].state == max_data[i].state) {
+              // if(data_min[i][k] == undefined) {
+              //   data_min[i][k] = 0;
+              // }
+              // console.log(data[i][k])
+              data[i][k] = parseFloat(max_data[i][k]) - data_min[i][k];
           }
         }
-    }}
-    return d;
-  });
+      }
+    }
+  }
+   
+  // console.log(data)
 
   // Extract the list of numerical dimensions and create a scale for each.
+  if(!scale_flag){
   xscale.domain(dimensions = d3.keys(data[0]).filter(function(k) {
       return (_.isNumber(data[0][k])) && (yscale[k] = d3.scaleSqrt()
       .domain(d3.extent(data, function(d) { return +d[k]; }))
       .range([h, 0]));
   }).sort());
+  scale_flag = true;
+  }
+  // console.log(data)
 
     // Add a group element for each dimension.
   var g = svg.selectAll(".dimension")
@@ -318,7 +371,7 @@ function update() {
 
 
     legend = create_legend(colors,brush);
-
+  
     // Render full foreground
     brush();
 }
