@@ -216,6 +216,7 @@ function add_line(
   stroke = "currentColor", // stroke color of line and dots
   fill = "white", // fill color of dots
   r = 3, // (fixed) radius of dots, in pixels
+  line_index,
   curve = d3.curveCatmullRom, // curve generator for the line
   strokeWidth = 2, // stroke width of line and dots
   strokeLinecap = "round", // stroke line cap of line
@@ -269,16 +270,36 @@ function add_line(
       .attr("fill", fill)
       .attr("stroke", stroke)
       .attr("stroke-width", strokeWidth)
-      .selectAll("circle")
+      .selectAll("g")
       .data(I)
-      .join("circle")
+      .join("g")
+      .on('mouseover', function(d, i) {
+        if (radius != undefined) {
+          text_ele = d3.select(this)
+            .append('text')
+            .text('' + radius[line_index])
+            .attr("transform", i => `translate(${xScale(X[i])},${yScale(Y[i])})`)
+
+          text_ele.attr('dx', "-5px")
+            .attr('dy', '10px')
+            .attr("fill", "black")
+            .attr('stroke-width', 0)
+            .style('font-size', '12px');
+        }
+      })
+      .on('mouseleave', function(d, i) {
+        if (radius != undefined) {
+          d3.select(this).selectAll('text').remove();
+        }
+      })
+      .append('circle')
       .attr("cx", i => xScale(X[i]))
       .attr("cy", i => yScale(Y[i]))
       .attr("r", r)
       .on('mouseover', function(d, i) {
         show_all_pairs(i);
       })
-      .on('mouseout', function(d, i) {
+      .on('mouseleave', function(d, i) {
         hide_all_pairs(i);
       });
 
@@ -404,7 +425,7 @@ function make_plot(
           .text(yLabel))
 
 }
-
+var raduis;
 function load_scatter(dataset, xaxis, yaxis, raxis) {
   // console.log(xaxis, yaxis);
   var X = [];
@@ -429,6 +450,8 @@ function load_scatter(dataset, xaxis, yaxis, raxis) {
     r_scale = d3.scaleLinear()
       .domain([0, d3.max(radius)]) // unit: km
       .range([3, 25]);
+  } else {
+    radius = undefined;
   }
   // console.log(X);
   // console.log(Y);
@@ -451,7 +474,8 @@ function load_scatter(dataset, xaxis, yaxis, raxis) {
       d3.map([X[i]], d=>'top'),
       color(keys[i]),
       color(keys[i]),
-      r)
+      r,
+      i)
     //animate(item[0], item[1], item[2], item[3]);
     line_items.push(item);
   }
