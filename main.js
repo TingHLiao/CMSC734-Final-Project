@@ -39,7 +39,8 @@ Promise.all([
     // time format 
     var time_parse = d3.timeParse('%Y/%m/%d');
     dataset.forEach(d => {
-        d.date = date_format(time_parse(d.date));
+        d.date = date_format(d3.timeParse('%m/%d/%Y')(d.date));
+        //d.date = date_format(time_parse(d.date));
     });
 
     filter_min_date = '2020/01/22'; //d3.min(dataset, function(d) {return d.date;});
