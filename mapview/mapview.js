@@ -87,7 +87,11 @@ info.update = function (props) {
     
     if(props == undefined) return;
     value = props.values[show_attr];
-    const contents = props ? `<b>${props.NAME}</b><br />${value}` : 'Hover over a state';
+    var contents;
+    if(value == undefined)
+        contents = `<b></b><br />`
+    else
+        contents = props ? `<b>${props.NAME}</b><br />${value}` : 'Hover over a state';
     this._div.innerHTML = `<h4>US COVID-19 Data</h4>${contents}`;
 };
 
