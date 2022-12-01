@@ -48,7 +48,7 @@ Promise.all([
 
     $('#select-state').val('All');
     $('select[multiple]').multiselect('refresh');
-    changeSliderMode("time");
+    changeSliderMode("period");
     select_data_attr(document.getElementsByName('btn-attr')[0], 'conf_cases');
     show_secondary_view_options();
     update();
