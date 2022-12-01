@@ -14,14 +14,14 @@ function rollup_func(d, xaxis, yaxis) {
   } else if(x_rollup == 'max') {
     var x_func = d3.max(d, function(e) {return +e[xaxis];})
   }*/
-  var x_func = d3.sum(d, function(e) {return +e[xaxis];});
+  var x_func = d3.sum(d, function(e) {return +e[secondary_name_mapping[xaxis]];});
   /*let y_rollup = rollup_method[yaxis];
   if(y_rollup == 'sum') {
     var y_func = d3.sum(d, function(e) {return +e[yaxis];})
   } else if(y_rollup == 'max') {
     var y_func = d3.max(d, function(e) {return +e[yaxis];})
   }*/
-  var y_func = d3.sum(d, function(e) {return +e[yaxis];});
+  var y_func = d3.sum(d, function(e) {return +e[secondary_name_mapping[yaxis]];});
   return {
     x: x_func,
     y: y_func,
@@ -357,7 +357,7 @@ function make_plot(
   insetLeft = inset, // inset the default x-range
   marginTop = 40, // top margin, in pixels
   marginRight = 20, // right margin, in pixels
-  marginBottom = 30, // bottom margin, in pixels
+  marginBottom = 40, // bottom margin, in pixels
   marginLeft = 40, // left margin, in pixels
   xType = d3.scaleLinear, // type of x-scale
   xDomain, // [xmin, xmax]
@@ -439,8 +439,8 @@ function load_scatter(dataset, xaxis, yaxis) {
       .domain(keys)
       .range(d3.schemeSet2);
     
-  X = d3.map(dataset, d=>d[xaxis]);
-  Y = d3.map(dataset, d=>d[yaxis]);
+  X = d3.map(dataset, d=>d[secondary_name_mapping[xaxis]]);
+  Y = d3.map(dataset, d=>d[secondary_name_mapping[yaxis]]);
   // console.log(X);
   // console.log(Y);
   // console.log(keys);

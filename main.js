@@ -126,8 +126,8 @@ function show_map(show_attr) {
 secondary_options = {
     'time': {
         'scatter plot': {
-            'x': ['new_case', 'new_death', 'daily_vaccinations', 'inpatient_beds_used_covid', 'total_Excess Estimate'],
-            'y': ['new_death', 'new_case', 'daily_vaccinations', 'inpatient_beds_used_covid', 'total_Excess Estimate'],
+            'x': ['New comfirm cases', 'New death', 'New vaccinations counts', 'COVID inpatient beds', 'Excess death'],
+            'y': ['New death', 'New comfirm cases', 'New vaccinations counts', 'COVID inpatient beds', 'Excess death'],
         },
         'bar chart': {
             'x': [],
@@ -136,8 +136,8 @@ secondary_options = {
     },
     'period': {
         'connected scatter plot': {
-            'x': ['new_case', 'new_death', 'daily_vaccinations', 'inpatient_beds_used_covid', 'total_Excess Estimate'],
-            'y': ['new_death', 'new_case', 'daily_vaccinations', 'inpatient_beds_used_covid', 'total_Excess Estimate'],
+            'x': ['New comfirm cases', 'New death', 'New vaccinations counts', 'COVID inpatient beds', 'Excess death'],
+            'y': ['New death', 'New comfirm cases', 'New vaccinations counts', 'COVID inpatient beds', 'Excess death'],
         },
         'bar chart': {
             'x': [],
@@ -145,6 +145,14 @@ secondary_options = {
         },
     }
 }
+
+var secondary_name_mapping = {
+    'New comfirm cases': 'new_case',
+    'New death': 'new_death',
+    'New vaccinations counts': 'daily_vaccinations',
+    'COVID inpatient beds': 'inpatient_beds_used_covid',
+    'Excess death': 'total_Excess Estimate',
+};
 
 
 function show_secondary_view_options() {
