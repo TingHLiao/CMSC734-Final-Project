@@ -112,6 +112,9 @@ function load_connected_scatter(_dataset, xaxis, yaxis) {
     var x = d3.map(dataset_lines[i], d=>d.value.x);
     var y = d3.map(dataset_lines[i], d=>d.value.y);
     var key = keys[i];
+
+    if(d3.sum(x) < 0 || d3.sum(y) < 0) continue;
+
     render_state = key;
     item = add_line(
       X=x, 
@@ -440,6 +443,7 @@ function load_scatter(dataset, xaxis, yaxis, raxis) {
     if(raxis != '-') {
       r = r_scale(radius[i]);
     }
+    if(X[i] < 0 || Y[i] < 0) continue;
     item = add_line(
       [X[i]], 
       [Y[i]], 
